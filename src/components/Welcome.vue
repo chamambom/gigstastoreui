@@ -5,7 +5,7 @@
 <template>
   <!-- Welcome Header -->
   <div class="welcome-header">
-    <h1>Welcome to Gigsta Marketplace</h1>
+    <h1>Welcome to GigSta Store</h1>
     <p class="subtitle">Your platform for connecting service providers with customers</p>
   </div>
 
@@ -14,7 +14,7 @@
     <h2>Expand Your Business - Coming Soon!</h2>
     <p class="coming-soon-text">
       We're excited to announce that soon you'll be able to sell your products
-      alongside your services through our integration with <strong>AfriMall.co.nz</strong>.
+      alongside your services through our integration with <strong>Afrimall.co.nz</strong>.
     </p>
 
     <div class="features-grid">

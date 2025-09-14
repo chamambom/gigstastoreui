@@ -4,14 +4,14 @@ import Welcome from './components/Welcome.vue'
 
 <template>
   <div>
-    <a href="https://vite.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
+<!--    <a href="https://vite.dev" target="_blank">-->
+<!--      <img src="/vite.svg" class="logo" alt="Vite logo" />-->
+<!--    </a>-->
+<!--    <a href="https://vuejs.org/" target="_blank">-->
+<!--      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />-->
+<!--    </a>-->
   </div>
-  <Welcome msg="Welcome to Afrimall" />
+  <Welcome msg="Welcome to GigSta Store" />
 </template>
 
 <style scoped>
