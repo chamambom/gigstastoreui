@@ -12,7 +12,7 @@
           class="flex flex-col pt-0"
       >
 <!--        <RouterView name="SiteMapBar"/>-->
-<!--        <RouterView name="SmartSearchBar"/>-->
+
       </div>
 
       <div class="flex flex-1">

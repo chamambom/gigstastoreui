@@ -73,7 +73,11 @@ export const useProductStore = defineStore('products', {
 
     byCategory: (state) => (category: string): Product[] => {
       return state.ids
+        // 1. Map IDs to items (Result: (Product | undefined)[])
         .map(id => state.items[id])
+        // 2. Filter out undefined values (Result: Product[])
+        .filter((p): p is Product => !!p)
+        // 3. Now you can safely filter by category
         .filter(p => p.category === category)
     },
   },

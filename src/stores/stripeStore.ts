@@ -18,6 +18,12 @@ export interface Plan {
   name?: string;
   price?: number;
   currency?: string;
+  services_used?: number;      // <--- (Used for checking usage vs limit)
+  limit?: number;              // <--- (Maximum number of services allowed)
+  can_add_more?: boolean;      // <--- (Used to check if user can buy more)
+  _id?: string;                // <--- (Likely the database ID)
+  plan_price?: number;         // <--- (Price field used for display)
+  stripe_price_id?: string;    // <-
 }
 
 export interface Invoice {
