@@ -295,7 +295,7 @@ import { useRoute, useRouter } from 'vue-router';
 
 // 1. Pinia Imports
 import { useAuthStore } from '@/stores/authStore'; // 👈 Use the Pinia store
-import { User } from '../types/User'; // 👈 Import the User type for safety
+//import { User } from '../types/User'; // 👈 Import the User type for safety
 
 // 2. Composable and Vuelidate Imports (unchanged)
 import { useAuthFlags } from '@/composables/useAuthFlags';

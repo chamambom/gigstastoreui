@@ -156,7 +156,7 @@ import { reactive, ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 // 1. Pinia Import
 import { useAuthStore } from '@/stores/authStore';
-import { User } from '@/types/User'; // Import User type for safety (though not strictly needed here)
+// import { User } from '@/types/User'; // Import User type for safety (though not strictly needed here)
 
 // Vuelidate imports
 import useVuelidate from '@vuelidate/core';
