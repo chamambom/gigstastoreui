@@ -426,7 +426,7 @@ const refreshProfile = async () => {
   try {
     await authStore.viewUser();
     if (isLoggedIn.value && user.value) {
-      await authStore.fetchUserSubscription();
+      await stripeStore.fetchUserSubscription();
     }
   } catch (error) {
     console.error("Error refreshing profile:", error);

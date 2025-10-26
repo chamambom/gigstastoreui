@@ -121,7 +121,7 @@
           </router-link>
           <router-link to="/signup"
                        class="btn btn-sm sm:btn-md bg-purple-800 text-white font-semibold rounded-md border-none hover:bg-purple-900 font-medium transition-all duration-200 relative z-50">
-            Create Virtual Shop
+            Start Selling
           </router-link>
         </div>
 

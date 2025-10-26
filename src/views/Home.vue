@@ -171,7 +171,7 @@ const goToPage = (page: number) => {
       <div class="max-w-7xl mx-auto px-4 py-6 flex flex-col md:flex-row items-center justify-between gap-4">
         <div>
           <h1 class="text-2xl font-bold">Discover, connect, and shop</h1>
-          <p class="text-sm text-purple-800 mt-1 font-semibold">
+          <p class="text-sm text-orange-400 mt-1 font-semibold">
             Your virtual mall to connect African small businesses with customers across Australia & New Zealand.
           </p>
 
@@ -190,9 +190,9 @@ const goToPage = (page: number) => {
 
         <router-link
             to="/seller/products/create"
-            class="btn btn-primary btn-sm shrink-0"
+            class="btn bg-orange-400 btn-sm shrink-0 text-white"
         >
-          Start Selling
+          Create Virtual Shop
         </router-link>
       </div>
     </div>
