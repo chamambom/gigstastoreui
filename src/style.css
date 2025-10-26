@@ -1,6 +1,6 @@
 @import "tailwindcss";
 @plugin "daisyui" {
-  themes: light , dark, cupcake;
+  themes: light , dark, cupcake, bumblebee;
 }
 
 :root {
@@ -21,40 +21,4 @@
 
 .footer-90 {
   @apply w-[90%] mx-auto;
-}
-
-/* DaisyUI specific overrides or custom styles */
-.step-circle {
-  @apply w-6 h-6 flex items-center justify-center rounded-full bg-base-300 text-base-content;
-}
-
-.step-primary .step-circle {
-  @apply bg-primary text-primary-content;
-}
-
-/* Ensure horizontal steps are properly spaced */
-.steps-horizontal .step {
-  @apply px-0; /* Remove default horizontal padding if it causes issues */
-}
-.steps-horizontal .step:not(:last-child)::after {
-  @apply bg-base-300; /* Line color between steps */
-}
-.steps-horizontal .step-primary:not(:last-child)::after {
-  @apply bg-primary; /* Line color for completed steps */
-}
-
-
-
-/* Specific styling for steps in FullBookingDetails to make them slightly more prominent if desired */
-.steps li {
-  padding-left: 0.5rem;
-  padding-right: 0.5rem;
-}
-
-.steps-vertical .step::before {
-  @apply bg-base-300; /* Line color for vertical steps */
-}
-
-.steps-vertical .step-primary::before {
-  @apply bg-primary; /* Line color for completed vertical steps */
 }

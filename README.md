@@ -1,11 +1,46 @@
-GigStaStore-project/
-└── frontend/
-    ├── .git/                 # Your existing Git files (preserved)
-    ├── Readme.md             # Your existing Readme (preserved)
-    ├── node_modules/         # Added by npm install
-    ├── public/               # Added by Vite
-    ├── src/                  # Added by Vite
-    ├── index.html            # Added by Vite
-    ├── package.json          # Added by Vite
-    ├── vite.config.ts        # Added by Vite
-    └── tsconfig.json         # Added by Vite (if using TypeScript)
+Implementation Steps
+1. Backend Setup
+bash# File structure
+src/
+├── models/
+│   ├── products.py         # Product, Cart, Order models
+│   └── userModel.py        # Existing User model
+├── schemas/
+│   ├── productSchemas.py   # Pydantic schemas
+│   └── userSchema.py       # Existing user schemas
+├── services/
+│   ├── cartService.py      # Cart business logic
+│   └── productService.py   # Product business logic
+├── crud/
+│   ├── userCrud.py         # Existing auth setup
+│   └── productCrud.py      # Product CRUD (optional if using services)
+└── routes/
+    ├── userRoute.py            # Existing user routes
+    └── productRoute.py         # New product/cart routes
+
+2. Frontend Setup
+bash# File structure
+src/
+├── stores/
+│   ├── products.ts         # Product store (Vuex pattern)
+│   └── cart.ts             # Cart store (Vuex pattern)
+├── composables/
+│   ├── useApi.ts           # API integration layer
+│   └── usePersistCart.ts   # REMOVED - persistence now server-side
+├── components/
+│   ├── ProductCard.vue     # Updated to work with new store
+│   ├── CartCard.vue        # Updated to use new cart store
+│   └── Nav.vue             # Already compatible
+└── views/
+    ├── Home.vue            # List products
+    ├── Cart.vue            # Cart page
+    └── Product.vue         # Product detail
+3. 
+3. Environment Variables
+env# Frontend (.env)
+VITE_API_URL=http://localhost:8000/api
+
+# Backend (.env)
+JWT_SECRET_KEY=your_secret_key
+MONGODB_URL=mongodb://localhost:27017/your_db
+FRONTEND_URL=http://localhost:5173
