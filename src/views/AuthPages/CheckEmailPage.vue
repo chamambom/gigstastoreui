@@ -107,49 +107,51 @@
   </div>
 </template>
 
-<script setup>
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
-import { useStore } from 'vuex';
+<script setup lang="ts">
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/authStore' // <-- your new Pinia store
 
-const router = useRouter();
-const store = useStore();
+const router = useRouter()
+const authStore = useAuthStore()
 
-const isResending = ref(false);
-const resendSuccess = ref(false);
-const resendError = ref('');
+// Reactive state
+const isResending = ref(false)
+const resendSuccess = ref(false)
+const resendError = ref('')
 
+// Function to resend verification email
 const resendEmail = async () => {
-  isResending.value = true;
-  resendSuccess.value = false;
-  resendError.value = '';
+  isResending.value = true
+  resendSuccess.value = false
+  resendError.value = ''
 
   try {
-    // --- THIS IS THE KEY CHANGE ---
-    // Dispatch the new action from the 'auth' store module
-    await store.dispatch('auth/resendVerificationEmail');
+    // --- KEY CHANGE ---
+    // Call Pinia action instead of Vuex dispatch
+    await authStore.resendVerificationEmail()
 
-    resendSuccess.value = true;
+    resendSuccess.value = true
 
     // Hide success message after 3 seconds
     setTimeout(() => {
-      resendSuccess.value = false;
-    }, 3000);
+      resendSuccess.value = false
+    }, 3000)
+  } catch (error: any) {
+    // Catch API or logic errors from store
+    resendError.value = error?.message || 'Failed to resend email. Please try again.'
 
-  } catch (error) {
-    // The store action will throw the error from the API call
-    resendError.value = error.message || 'Failed to resend email. Please try again.';
-
-    // Hide error message after 5 seconds
+    // Hide error after 5 seconds
     setTimeout(() => {
-      resendError.value = '';
-    }, 5000);
+      resendError.value = ''
+    }, 5000)
   } finally {
-    isResending.value = false;
+    isResending.value = false
   }
-};
+}
 
+// Navigation
 const goBack = () => {
-  router.push('/login');
-};
+  router.push('/login')
+}
 </script>

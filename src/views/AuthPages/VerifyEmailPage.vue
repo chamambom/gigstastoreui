@@ -19,38 +19,45 @@
   </div>
 </template>
 
-<script setup>
-import {ref, onMounted} from 'vue';
-import {useRoute, useRouter} from 'vue-router';
-import {useStore} from 'vuex';
+<script setup lang="ts">
+import { ref, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/authStore' // ✅ using Pinia store
 
-const loading = ref(true);
-const success = ref(false);
-const error = ref('');
+// --- State ---
+const loading = ref(true)
+const success = ref(false)
+const error = ref('')
 
-const store = useStore();
-const route = useRoute();
-const router = useRouter();
+const route = useRoute()
+const router = useRouter()
+const authStore = useAuthStore()
 
+// --- Lifecycle ---
 onMounted(async () => {
-  const token = route.query.token;
+  const token = route.query.token as string | undefined
+
   if (!token) {
-    error.value = 'No verification token provided.';
-    loading.value = false;
-    return;
+    error.value = 'No verification token provided.'
+    loading.value = false
+    return
   }
 
   try {
-    await store.dispatch('auth/verifyEmail', token);
-    success.value = true;
-    loading.value = false;
+    // ✅ Call Pinia action instead of Vuex dispatch
+    await authStore.verifyEmail(token)
 
+    success.value = true
+    loading.value = false
+
+    // Redirect after short delay
     setTimeout(() => {
-      router.push('/onboarding/continue');
-    }, 1500);
-  } catch (e) {
-    loading.value = false;
-    error.value = e.response?.data?.detail || 'Invalid or expired verification link.';
+      router.push('/onboarding/continue')
+    }, 1500)
+  } catch (e: any) {
+    loading.value = false
+    error.value = e?.response?.data?.detail || 'Invalid or expired verification link.'
   }
-});
+})
 </script>
+

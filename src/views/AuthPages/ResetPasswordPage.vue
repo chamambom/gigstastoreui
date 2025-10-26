@@ -197,112 +197,106 @@
   </div>
 </template>
 
-<script setup>
-import {ref, onMounted, nextTick, computed, reactive} from 'vue';
-import {useRoute, useRouter} from 'vue-router';
-import {useStore} from 'vuex';
-// Vuelidate imports
-import useVuelidate from '@vuelidate/core';
-import {required, email as emailValidator, minLength, sameAs, helpers} from '@vuelidate/validators';
+<script setup lang="ts">
+import { ref, onMounted, computed, reactive } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import useVuelidate from '@vuelidate/core'
+import { required, email as emailValidator, minLength, sameAs, helpers } from '@vuelidate/validators'
+import { useAuthStore } from '@/stores/authStore' // ✅ Pinia store
 
-const route = useRoute();
-const router = useRouter();
-const store = useStore();
+const route = useRoute()
+const router = useRouter()
+const authStore = useAuthStore()
 
+// --- Reactive State ---
 const state = reactive({
   email: '',
   newPassword: '',
   confirmPassword: '',
-});
+})
 
-const errorMessage = ref('');
-const successMessage = ref('');
-const loading = ref(false);
-const resetToken = ref(null);
+const errorMessage = ref('')
+const successMessage = ref('')
+const loading = ref(false)
+const resetToken = ref<string | null>(null)
 
+// --- Lifecycle ---
 onMounted(() => {
-  resetToken.value = route.query.token;
+  resetToken.value = (route.query.token as string) || null
 
   if (!resetToken.value) {
-    errorMessage.value = 'Invalid or missing password reset token. Please request a new one.';
+    errorMessage.value = 'Invalid or missing password reset token. Please request a new one.'
     setTimeout(() => {
-      router.push('/forgot-password');
-    }, 3000);
+      router.push('/forgot-password')
+    }, 3000)
   }
-});
+})
 
-// Vuelidate rules
-const rules = computed(() => {
-  return {
-    email: {
-      required: helpers.withMessage('Email is required', required),
-      email: helpers.withMessage('Must be a valid email address', emailValidator),
-    },
-    newPassword: {
-      required: helpers.withMessage('New password is required', required),
-      minLength: helpers.withMessage(
-          ({$params}) => `Password must be at least ${$params.min} characters long`,
-          minLength(8)
-      ),
-    },
-    confirmPassword: {
-      required: helpers.withMessage('Password confirmation is required', required),
-      sameAsPassword: helpers.withMessage(
-          'Passwords do not match',
-          sameAs(state.newPassword)
-      ),
-    },
-  };
-});
+// --- Validation Rules ---
+const rules = computed(() => ({
+  email: {
+    required: helpers.withMessage('Email is required', required),
+    email: helpers.withMessage('Must be a valid email address', emailValidator),
+  },
+  newPassword: {
+    required: helpers.withMessage('New password is required', required),
+    minLength: helpers.withMessage(
+      ({ $params }) => `Password must be at least ${$params.min} characters long`,
+      minLength(8)
+    ),
+  },
+  confirmPassword: {
+    required: helpers.withMessage('Password confirmation is required', required),
+    sameAsPassword: helpers.withMessage('Passwords do not match', sameAs(() => state.newPassword)),
+  },
+}))
 
-// Initialize Vuelidate
-const v$ = useVuelidate(rules, state);
+// --- Initialize Vuelidate ---
+const v$ = useVuelidate(rules, state)
 
+// --- Form Submit ---
 const submitResetPassword = async () => {
-  const isFormValid = await v$.value.$validate();
-
+  const isFormValid = await v$.value.$validate()
   if (!isFormValid) {
-    errorMessage.value = 'Please correct the errors in the form.';
-    return;
+    errorMessage.value = 'Please correct the errors in the form.'
+    return
   }
 
   if (!resetToken.value) {
-    errorMessage.value = 'Password reset token is missing. Please try again from the email link.';
-    return;
+    errorMessage.value = 'Password reset token is missing. Please try again from the email link.'
+    return
   }
 
-  loading.value = true;
-  errorMessage.value = '';
-  successMessage.value = '';
+  loading.value = true
+  errorMessage.value = ''
+  successMessage.value = ''
 
   try {
-    const result = await store.dispatch('auth/resetPassword', {
+    // ✅ Call Pinia action instead of Vuex dispatch
+    const result = await authStore.resetPassword({
       token: resetToken.value,
       password: state.newPassword,
       email: state.email,
-    });
+    })
 
-    successMessage.value = result.message || 'Your password has been successfully reset!';
+    successMessage.value = result?.message || 'Your password has been successfully reset!'
 
-    // Show success message for a brief moment before redirecting
+    // Redirect after short delay
     setTimeout(() => {
       router.push({
-        name: 'Login', // or path: '/login' - adjust based on your route name
+        name: 'Login',
         query: {
           message: 'Password reset successful. Please log in with your new password.',
-          email: state.email // Pre-fill email on login form
-        }
-      });
-    }, 3000); // 2 second delay to show success message
-
-  } catch (error) {
+          email: state.email,
+        },
+      })
+    }, 3000)
+  } catch (error: any) {
+    console.error('Password reset failed:', error)
     errorMessage.value =
-        error.message ||
-        'Failed to reset password. The link may be expired or invalid.';
-    console.error('Password reset failed:', error);
+      error?.message || 'Failed to reset password. The link may be expired or invalid.'
   } finally {
-    loading.value = false;
+    loading.value = false
   }
-};
-
+}
 </script>
