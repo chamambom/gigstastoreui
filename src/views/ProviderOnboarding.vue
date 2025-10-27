@@ -326,7 +326,11 @@ const rules = computed(() => ({
       required: helpers.withMessage('Phone number is required', required),
       isMobileNumberValid: helpers.withMessage(
           'Please enter a valid mobile number for the selected country.',
-          (value) => isMobileNumberValid(value, phoneCountryCode.value)
+          (value: unknown) => {
+            // FIX: Type guard to ensure value is a string
+            if (typeof value !== 'string') return false
+            return isMobileNumberValid(value, phoneCountryCode.value)
+          }
       ),
     },
     address: {
@@ -371,18 +375,32 @@ watch(
         }
       } else providerDetails.phone_number = ''
 
-      const addr = newUser.address || {}
-      providerDetails.address.formatted = addr.formatted || ''
-      providerDetails.address.street_number = addr.street_number || ''
-      providerDetails.address.street = addr.street || ''
-      providerDetails.address.locality = addr.locality || ''
-      providerDetails.address.city = addr.city || ''
-      providerDetails.address.region = addr.region || ''
-      providerDetails.address.postcode = addr.postcode || ''
-      providerDetails.address.latitude = addr.latitude || null
-      providerDetails.address.longitude = addr.longitude || null
-
-      userAddressSearchInput.value = providerDetails.address.formatted
+      // FIX: Properly handle optional address with type safety
+      const addr = newUser.address
+      if (addr) {
+        providerDetails.address.formatted = addr.formatted
+        providerDetails.address.street_number = addr.street_number
+        providerDetails.address.street = addr.street
+        providerDetails.address.locality = addr.locality
+        providerDetails.address.city = addr.city
+        providerDetails.address.region = addr.region
+        providerDetails.address.postcode = addr.postcode
+        providerDetails.address.latitude = addr.latitude
+        providerDetails.address.longitude = addr.longitude
+        userAddressSearchInput.value = addr.formatted
+      } else {
+        // Reset to empty values if no address exists
+        providerDetails.address.formatted = ''
+        providerDetails.address.street_number = ''
+        providerDetails.address.street = ''
+        providerDetails.address.locality = ''
+        providerDetails.address.city = ''
+        providerDetails.address.region = ''
+        providerDetails.address.postcode = ''
+        providerDetails.address.latitude = null
+        providerDetails.address.longitude = null
+        userAddressSearchInput.value = ''
+      }
     },
     {immediate: true}
 )
@@ -408,7 +426,7 @@ const fetchAddressSuggestions = debounce(async () => {
 
 // Select address suggestion
 const selectAddressSuggestion = (suggestion: AddressSuggestion) => {
-  userAddressSearchInput.value = suggestion.formatted
+  userAddressSearchInput.value = suggestion.formatted || ''
   addressSuggestions.value = []
 
   Object.assign(providerDetails.address, {
@@ -441,11 +459,14 @@ const handleSubmit = async () => {
     })
     router.push('/onboarding/billing-setup')
   } catch (error: unknown) {
-    const err = error as any
-    console.error(
-        'Provider setup (Step 1) failed:',
-        String(err?.response?.data?.detail || err?.message || err)
-    )
+    // FIX: Properly handle unknown error type
+    if (error instanceof Error) {
+      console.error('Provider setup (Step 1) failed:', error.message)
+    } else if (axios.isAxiosError(error)) {
+      console.error('Provider setup (Step 1) failed:', error.response?.data?.detail || error.message)
+    } else {
+      console.error('Provider setup (Step 1) failed:', String(error))
+    }
   }
 }
 
