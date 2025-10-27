@@ -100,7 +100,7 @@
           </div>
 
           <!-- Loading State -->
-          <div v-else-if="isLoggedIn && !user" class="text-center space-y-4">
+          <div v-else-if="isLoggedIn && !currentUser" class="text-center space-y-4">
             <div class="flex justify-center">
               <span class="loading loading-spinner loading-lg text-primary"></span>
             </div>

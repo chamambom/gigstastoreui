@@ -276,7 +276,7 @@ const submitResetPassword = async () => {
     const result = await authStore.resetPassword({
       token: resetToken.value,
       password: state.newPassword,
-      email: state.email,
+      // email: state.email,
     })
 
     successMessage.value = result?.message || 'Your password has been successfully reset!'
