@@ -34,7 +34,7 @@
               <div class="flex items-center gap-2">
                 <h3 class="font-semibold text-sm text-base-content  group-hover:text-orange-400 transition-colors">
                   Products</h3>
-                <span v-if="currentUserPlan?.services_used > 0"
+                <span v-if="(currentUserPlan?.services_used ?? 0) > 0"
                       class="px-3 py-1 bg-orange-400/10 text-orange-400 rounded-full text-xs font-medium border border-orange-400/20">
                   {{ currentUserPlan?.services_used }}
                 </span>
@@ -112,7 +112,7 @@
                       </div>
                     </div>
 
-                    <button @click="upgradePlan(plan.stripe_price_id)"
+                    <button @click="upgradePlan(plan.stripe_price_id ?? '')"
                             class="w-full bg-gray-400 hover:bg-gray-700 text-white py-2 px-2 rounded-full transition-all duration-200 flex items-center justify-center gap-2">
                       <i class="fas fa-arrow-up text-xs"></i>
                       Upgrade Now

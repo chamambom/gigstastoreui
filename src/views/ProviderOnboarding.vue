@@ -27,7 +27,8 @@
         <!-- Main Form Section -->
         <div class="max-w-2xl mx-auto w-full">
           <div class="flex items-center mb-6">
-            <div class="flex-shrink-0 w-10 h-10 bg-orange-400 text-white rounded-full flex items-center justify-center mr-4">
+            <div
+                class="flex-shrink-0 w-10 h-10 bg-orange-400 text-white rounded-full flex items-center justify-center mr-4">
               <span class="font-semibold">1</span>
             </div>
             <div>
@@ -181,7 +182,8 @@
 
                     <!-- Address Suggestions Dropdown -->
                     <div v-if="addressSuggestions.length" class="relative mt-2">
-                      <div class="absolute w-full z-10 bg-base-100 border border-base-300 rounded-lg shadow-lg max-h-48 overflow-y-auto">
+                      <div
+                          class="absolute w-full z-10 bg-base-100 border border-base-300 rounded-lg shadow-lg max-h-48 overflow-y-auto">
                         <div
                             v-for="(suggestion, index) in addressSuggestions"
                             :key="index"
@@ -225,7 +227,8 @@
                   @click="goBackToSeekerDashboard"
                   class="btn btn-ghost text-base-content"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
+                     stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
                 </svg>
                 Back to Dashboard
@@ -237,7 +240,8 @@
                   :disabled="v$.$invalid"
               >
                 Complete Provider Setup
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24"
+                     stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                 </svg>
               </button>
@@ -250,14 +254,28 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, computed, ref, watch } from 'vue'
-import { useRouter } from 'vue-router'
+import {reactive, computed, ref, watch} from 'vue'
+import {useRouter} from 'vue-router'
 import axios from 'axios'
-import { debounce } from 'lodash-es'
+import {debounce} from 'lodash-es'
 import useVuelidate from '@vuelidate/core'
-import { required, helpers } from '@vuelidate/validators'
+import {required, helpers} from '@vuelidate/validators'
 
-import { useAuthStore } from '@/stores/authStore'
+import {useAuthStore} from '@/stores/authStore'
+
+interface AddressSuggestion {
+  formatted: string
+  street_number?: string
+  street?: string
+  locality?: string
+  city?: string
+  region?: string
+  postcode?: string
+  lat?: number
+  lon?: number
+}
+
+const addressSuggestions = ref<AddressSuggestion[]>([])
 
 // Pinia store
 const authStore = useAuthStore()
@@ -283,7 +301,7 @@ const providerDetails = reactive({
 
 // Address search reactive variables
 const userAddressSearchInput = ref('')
-const addressSuggestions = ref([])
+// const addressSuggestions = ref([])
 const countryCode = ref('NZ')
 const phoneCountryCode = ref('+64')
 
@@ -302,71 +320,71 @@ const isMobileNumberValid = (value: string, phoneCountryCode: string) => {
 // Vuelidate rules
 const rules = computed(() => ({
   providerDetails: {
-    full_name: { required: helpers.withMessage('Full name is required', required) },
-    tradingName: { required: helpers.withMessage('Trading name is required', required) },
+    full_name: {required: helpers.withMessage('Full name is required', required)},
+    tradingName: {required: helpers.withMessage('Trading name is required', required)},
     phone_number: {
       required: helpers.withMessage('Phone number is required', required),
       isMobileNumberValid: helpers.withMessage(
-        'Please enter a valid mobile number for the selected country.',
-        (value) => isMobileNumberValid(value, phoneCountryCode.value)
+          'Please enter a valid mobile number for the selected country.',
+          (value) => isMobileNumberValid(value, phoneCountryCode.value)
       ),
     },
     address: {
       latitude: {
         required: helpers.withMessage(
-          'Please select a valid address from the suggestions',
-          required
+            'Please select a valid address from the suggestions',
+            required
         ),
       },
       longitude: {
         required: helpers.withMessage(
-          'Please select a valid address from the suggestions',
-          required
+            'Please select a valid address from the suggestions',
+            required
         ),
       },
     },
   },
-  userAddressSearchInput: { required: helpers.withMessage('Address is required', required) },
-  countryCode: { required: helpers.withMessage('Country is required', required) },
+  userAddressSearchInput: {required: helpers.withMessage('Address is required', required)},
+  countryCode: {required: helpers.withMessage('Country is required', required)},
 }))
 
-const v$ = useVuelidate(rules, { providerDetails, userAddressSearchInput, countryCode })
+const v$ = useVuelidate(rules, {providerDetails, userAddressSearchInput, countryCode})
 
 // Watch currentUser and populate providerDetails
 watch(
-  currentUser,
-  (newUser) => {
-    if (!newUser) return
+    currentUser,
+    (newUser) => {
+      if (!newUser) return
 
-    providerDetails.full_name = newUser.full_name || ''
-    providerDetails.tradingName = newUser.tradingName || ''
+      providerDetails.full_name = newUser.full_name || ''
+      providerDetails.tradingName = newUser.tradingName || ''
 
-    if (newUser.phone_number) {
-      if (newUser.phone_number.startsWith('+64')) {
-        phoneCountryCode.value = '+64'
-        providerDetails.phone_number = newUser.phone_number.substring(3)
-      } else if (newUser.phone_number.startsWith('+61')) {
-        phoneCountryCode.value = '+61'
-        providerDetails.phone_number = newUser.phone_number.substring(3)
-      } else {
-        providerDetails.phone_number = newUser.phone_number
-      }
-    } else providerDetails.phone_number = ''
+      if (newUser.phone_number) {
+        if (newUser.phone_number.startsWith('+64')) {
+          phoneCountryCode.value = '+64'
+          providerDetails.phone_number = newUser.phone_number.substring(3)
+        } else if (newUser.phone_number.startsWith('+61')) {
+          phoneCountryCode.value = '+61'
+          providerDetails.phone_number = newUser.phone_number.substring(3)
+        } else {
+          providerDetails.phone_number = newUser.phone_number
+        }
+      } else providerDetails.phone_number = ''
 
-    const addr = newUser.address || {}
-    providerDetails.address.formatted = addr.formatted || ''
-    providerDetails.address.street_number = addr.street_number || ''
-    providerDetails.address.street = addr.street || ''
-    providerDetails.address.locality = addr.locality || ''
-    providerDetails.address.city = addr.city || ''
-    providerDetails.address.region = addr.region || ''
-    providerDetails.address.postcode = addr.postcode || ''
-    providerDetails.address.latitude = addr.latitude || null
-    providerDetails.address.longitude = addr.longitude || null
+      const addr = newUser.address || {}
+      providerDetails.address.formatted = addr.formatted || ''
+      providerDetails.address.street_number = addr.street_number || ''
+      providerDetails.address.street = addr.street || ''
+      providerDetails.address.locality = addr.locality || ''
+      providerDetails.address.city = addr.city || ''
+      providerDetails.address.region = addr.region || ''
+      providerDetails.address.postcode = addr.postcode || ''
+      providerDetails.address.latitude = addr.latitude || null
+      providerDetails.address.longitude = addr.longitude || null
 
-    userAddressSearchInput.value = providerDetails.address.formatted
-  },
-  { immediate: true }
+      userAddressSearchInput.value = providerDetails.address.formatted
+    },
+    {immediate: true}
 )
 
 // Address suggestions API
@@ -379,7 +397,7 @@ const fetchAddressSuggestions = debounce(async () => {
 
   try {
     const res = await axios.get(`${API_BASE_URL}/api/v1/api/address/suggestions`, {
-      params: { q: userAddressSearchInput.value, country_code: countryCode.value },
+      params: {q: userAddressSearchInput.value, country_code: countryCode.value},
     })
     addressSuggestions.value = res.data
   } catch (error) {
@@ -419,13 +437,14 @@ const handleSubmit = async () => {
       full_name: providerDetails.full_name,
       tradingName: providerDetails.tradingName,
       phone_number: fullPhoneNumber,
-      address: { ...providerDetails.address },
+      address: {...providerDetails.address},
     })
     router.push('/onboarding/billing-setup')
-  } catch (error) {
+  } catch (error: unknown) {
+    const err = error as any
     console.error(
-      'Provider setup (Step 1) failed:',
-      error.response?.data?.detail || error.message
+        'Provider setup (Step 1) failed:',
+        err?.response?.data?.detail || err?.message || err
     )
   }
 }
