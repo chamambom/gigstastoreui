@@ -275,7 +275,7 @@ interface AddressSuggestion {
   lon?: number
 }
 
-const addressSuggestions = ref<AddressSuggestion[]>([])
+const addressSuggestions = ref<any[]>([])  // or ref<Record<string, any>[]>([])
 
 // Pinia store
 const authStore = useAuthStore()

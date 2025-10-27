@@ -30,9 +30,9 @@ export interface Address {
 }
 
 export interface OnboardingStatus {
-    basic_complete: boolean;
-    provider_onboarding_complete: boolean;
-    billing_setup_complete: boolean;
+    basic_complete?: boolean;
+    provider_onboarding_complete?: boolean;
+    billing_setup_complete?: boolean;
 }
 
 // --- Main User Interface ---

@@ -1,7 +1,7 @@
 // src/stores/authStore.ts
-import { defineStore } from 'pinia';
+import {defineStore} from 'pinia';
 import axios from 'axios';
-import type { User, AuthState, OnboardingStatus } from '../types/User';
+import type {User, AuthState, OnboardingStatus} from '../types/User';
 
 export const useAuthStore = defineStore('auth', {
     // 1. STATE
@@ -49,8 +49,8 @@ export const useAuthStore = defineStore('auth', {
 
         async verifyEmail(token: string): Promise<User> {
             try {
-                const response = await axios.post('/auth/verify', { token });
-                const { user, access_token } = response.data;
+                const response = await axios.post('/auth/verify', {token});
+                const {user, access_token} = response.data;
                 localStorage.setItem('token', access_token);
                 this.setUser(user);
                 return user;
@@ -62,7 +62,7 @@ export const useAuthStore = defineStore('auth', {
 
         async requestVerifyToken(email: string): Promise<void> {
             try {
-                await axios.post('/auth/request-verify-token', { email });
+                await axios.post('/auth/request-verify-token', {email});
             } catch (e) {
                 console.error('Failed to send verification email:', e);
                 throw e;
@@ -76,28 +76,32 @@ export const useAuthStore = defineStore('auth', {
 
         async requestPasswordReset(email: string): Promise<void> {
             try {
-                await axios.post('/auth/forgot-password', { email });
+                await axios.post('/auth/forgot-password', {email});
             } catch (e) {
                 console.error('Failed to request password reset:', e);
                 throw e;
             }
         },
 
-        async resetPassword({ token, password }: { token: string, password: string }): Promise<any> {
+        async resetPassword({token, password}: { token: string, password: string }): Promise<any> {
             try {
-                await axios.post('/auth/reset-password', { token, password });
-                return { success: true, message: 'Password reset successful.' };
+                await axios.post('/auth/reset-password', {token, password});
+                return {success: true, message: 'Password reset successful.'};
             } catch (error: any) {
                 throw new Error(error.response?.data?.detail || error.message);
             }
         },
 
-        async updateUserOnboardingStatus(payload: { is_provisional: boolean; roles: string[] }): Promise<User> {
+        async updateUserOnboardingStatus(payload: {
+            is_provisional: boolean
+            roles: string[]
+            onboarding_status?: Partial<OnboardingStatus>
+        }): Promise<User> {
             const token = localStorage.getItem('token');
             if (!token) throw new Error("Authentication required");
             try {
                 const response = await axios.patch('users/me', payload, {
-                    headers: { 'Authorization': `Bearer ${token}` },
+                    headers: {'Authorization': `Bearer ${token}`},
                 });
                 this.setUser(response.data);
                 return response.data;
@@ -112,7 +116,7 @@ export const useAuthStore = defineStore('auth', {
             if (!token) throw new Error("Authentication required");
             try {
                 const response = await axios.post('/api/v1/user/onboarding/provider', providerData, {
-                    headers: { 'Authorization': `Bearer ${token}` },
+                    headers: {'Authorization': `Bearer ${token}`},
                 });
                 this.setUser(response.data);
                 return response.data;
@@ -127,7 +131,7 @@ export const useAuthStore = defineStore('auth', {
             if (!token) throw new Error('No authentication token found.');
             try {
                 const response = await axios.put('/api/v1/user/complete-basic-profile', profileData, {
-                    headers: { 'Authorization': `Bearer ${token}` },
+                    headers: {'Authorization': `Bearer ${token}`},
                 });
                 this.setUser(response.data);
                 return response.data;
@@ -142,7 +146,7 @@ export const useAuthStore = defineStore('auth', {
             if (!token) throw new Error('No authentication token found.');
             try {
                 const response = await axios.post('/api/v1/user/complete-billing-setup', {}, {
-                    headers: { 'Authorization': `Bearer ${token}` },
+                    headers: {'Authorization': `Bearer ${token}`},
                 });
                 this.setUser(response.data);
                 return response.data;
@@ -154,8 +158,8 @@ export const useAuthStore = defineStore('auth', {
 
         async setProviderPending(): Promise<void> {
             const token = localStorage.getItem('token');
-            await axios.patch('/api/v1/user/set-provider-pending', { provider_status: 'pending' }, {
-                headers: { 'Authorization': `Bearer ${token}` },
+            await axios.patch('/api/v1/user/set-provider-pending', {provider_status: 'pending'}, {
+                headers: {'Authorization': `Bearer ${token}`},
             });
         },
 
@@ -167,7 +171,7 @@ export const useAuthStore = defineStore('auth', {
             }
             try {
                 const response = await axios.get('users/me', {
-                    headers: { 'Authorization': `Bearer ${token}` },
+                    headers: {'Authorization': `Bearer ${token}`},
                 });
                 this.setUser(response.data);
             } catch (error: any) {
@@ -181,8 +185,8 @@ export const useAuthStore = defineStore('auth', {
             const token = localStorage.getItem('token');
             if (!token) throw new Error("Authentication required.");
             try {
-                const { data } = await axios.get('users/me/provider-status', {
-                    headers: { 'Authorization': `Bearer ${token}`, 'Cache-Control': 'no-cache' },
+                const {data} = await axios.get('users/me/provider-status', {
+                    headers: {'Authorization': `Bearer ${token}`, 'Cache-Control': 'no-cache'},
                 });
                 if (!data.isActive) {
                     await this.viewUser();
@@ -200,8 +204,8 @@ export const useAuthStore = defineStore('auth', {
             try {
                 const response = await axios.post(
                     'auth/jwt/login',
-                    new URLSearchParams({ username: credentials.email, password: credentials.password }),
-                    { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
+                    new URLSearchParams({username: credentials.email, password: credentials.password}),
+                    {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
                 );
                 localStorage.setItem('token', response.data.access_token);
                 await this.viewUser();
@@ -218,7 +222,7 @@ export const useAuthStore = defineStore('auth', {
 
         async googleLogin(): Promise<void> {
             try {
-                const { data } = await axios.get('/auth/google/authorize');
+                const {data} = await axios.get('/auth/google/authorize');
                 if (data.authorization_url) window.location.href = data.authorization_url;
                 else throw new Error("No authorization URL received.");
             } catch (error) {
@@ -229,7 +233,7 @@ export const useAuthStore = defineStore('auth', {
 
         async facebookLogin(): Promise<void> {
             try {
-                const { data } = await axios.get('auth/facebook/authorize');
+                const {data} = await axios.get('auth/facebook/authorize');
                 if (data.authorization_url) window.location.href = data.authorization_url;
                 else throw new Error("No authorization URL received.");
             } catch (error) {
@@ -247,7 +251,7 @@ export const useAuthStore = defineStore('auth', {
             try {
                 if (token) {
                     await axios.post('auth/jwt/logout', {}, {
-                        headers: { 'Authorization': `Bearer ${token}` }, timeout: 3000
+                        headers: {'Authorization': `Bearer ${token}`}, timeout: 3000
                     });
                 }
             } catch (error) {
