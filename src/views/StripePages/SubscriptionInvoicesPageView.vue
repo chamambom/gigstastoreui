@@ -63,7 +63,7 @@
                 </p>
                 <!-- Show both amounts if they're different -->
                 <div v-if="invoice.amount_due !== invoice.amount_paid" class="text-sm text-gray-500">
-                  <div v-if="invoice.amount_paid > 0">
+                  <div v-if="(invoice.amount_paid ?? 0) > 0">
                     Paid: {{ formatCurrency(invoice.amount_paid, invoice.currency) }}
                   </div>
                   <div v-if="invoice.status !== 'paid'">

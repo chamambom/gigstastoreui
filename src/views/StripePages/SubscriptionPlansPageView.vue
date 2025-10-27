@@ -83,7 +83,7 @@
                   <p class="text-gray-600 mb-4">{{ plan.perks }}</p>
 
                   <div class="space-y-3">
-                    <button @click="toggleUpgradeConfirm(plan.stripe_price_id)"
+                    <button @click="toggleUpgradeConfirm(plan.stripe_price_id ?? '')"
                             class="btn btn-success btn-block shadow-lg hover:shadow-xl transition-all duration-200"
                             :disabled="!hasPaymentMethod">
                       <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -111,7 +111,7 @@
                               class="btn btn-success btn-sm">
                         Confirm Upgrade
                       </button>
-                      <button @click="toggleUpgradeConfirm(null)"
+                      <button @click="toggleUpgradeConfirm(null ?? '')"
                               class="btn btn-outline btn-sm">
                         Cancel
                       </button>
@@ -145,7 +145,7 @@
 
                   <p class="text-gray-600 mb-4">{{ plan.perks }}</p>
 
-                  <button @click="toggleDowngradeConfirm(plan.stripe_price_id)"
+                  <button @click="toggleDowngradeConfirm(plan.stripe_price_id ?? '')"
                           class="btn btn-error btn-block shadow-lg hover:shadow-xl transition-all duration-200">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -169,7 +169,7 @@
                               class="btn btn-info btn-sm">
                         Confirm Downgrade
                       </button>
-                      <button @click="toggleDowngradeConfirm(null)"
+                      <button @click="toggleDowngradeConfirm(null ?? '')"
                               class="btn btn-outline btn-sm">
                         Cancel
                       </button>
@@ -318,7 +318,7 @@
                       </div>
                       <div>
                         <p class="font-semibold text-gray-800">
-                          **** **** **** {{ method.last4 }} ({{ method.brand.toUpperCase() }})
+                          **** **** **** {{ method.last4 }} ({{ method.brand?.toUpperCase() ?? 'CARD'}})
                         </p>
                         <p class="text-sm text-gray-500">Expires {{ method.exp_month }}/{{ method.exp_year }}</p>
                         <span v-if="selectedPaymentMethod === method.id"
@@ -567,7 +567,7 @@ const saveNewCard = async () => {
     if (error) throw new Error(error.message || "Failed to confirm card setup.")
     if (!setupIntent?.payment_method) throw new Error("Missing payment method ID.")
 
-    const message = await stripeStore.saveNewCard({ payment_method_id: setupIntent.payment_method })
+    const message = await stripeStore.saveNewCard({ payment_method_id: setupIntent.payment_method ?? ''})
     successMessage.value = message
     useNewCard.value = false
   } catch (error: any) {
@@ -587,7 +587,7 @@ const upgradeSubscription = async (priceId: string) => {
   try {
     await stripeStore.upgradeSubscription({
       priceId,
-      paymentMethodId: selectedPaymentMethod.value,
+      paymentMethodId: selectedPaymentMethod.value ?? '',
     })
     confirmUpgradeId.value = null
     successMessage.value = "Subscription upgraded successfully!"
