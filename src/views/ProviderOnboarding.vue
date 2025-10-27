@@ -263,8 +263,19 @@ import {required, helpers} from '@vuelidate/validators'
 
 import {useAuthStore} from '@/stores/authStore'
 
+interface AddressSuggestion {
+  formatted?: string
+  street_number?: string
+  street?: string
+  locality?: string
+  city?: string
+  region?: string
+  postcode?: string
+  lat?: number
+  lon?: number
+}
 
-const addressSuggestions = ref<any[]>([])
+const addressSuggestions = ref<AddressSuggestion[]>([])
 
 // Pinia store
 const authStore = useAuthStore()
@@ -401,15 +412,15 @@ const selectAddressSuggestion = (suggestion: any) => {
   addressSuggestions.value = []
 
   Object.assign(providerDetails.address, {
-    formatted: suggestion.formatted,
-    street_number: suggestion.street_number,
-    street: suggestion.street,
-    locality: suggestion.locality,
-    city: suggestion.city,
-    region: suggestion.region,
-    postcode: suggestion.postcode,
-    latitude: suggestion.lat,
-    longitude: suggestion.lon,
+    formatted: suggestion.formatted || '',
+    street_number: suggestion.street_number || '',
+    street: suggestion.street || '',
+    locality: suggestion.locality || '',
+    city: suggestion.city || '',
+    region: suggestion.region || '',
+    postcode: suggestion.postcode || '',
+    latitude: suggestion.lat ?? null,
+    longitude: suggestion.lon ?? null,
   })
 
   v$.value.providerDetails.address.latitude.$touch()
