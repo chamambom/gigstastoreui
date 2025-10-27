@@ -188,7 +188,7 @@
                             @click="selectAddressSuggestion(suggestion)"
                             class="p-3 hover:bg-base-200 cursor-pointer border-b border-base-200 last:border-b-0 transition-colors"
                         >
-                          <div class="text-sm text-base-content">{{ suggestion.formatted }}</div>
+                          <div class="text-sm text-base-content">{{ suggestion?.formatted ?? '' }}</div>
                         </div>
                       </div>
                     </div>
@@ -276,8 +276,8 @@ const providerDetails = reactive({
     city: '',
     region: '',
     postcode: '',
-    latitude: null,
-    longitude: null,
+    latitude: null as number | null,
+    longitude: null as number | null,
   }),
 })
 
