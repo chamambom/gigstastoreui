@@ -263,19 +263,8 @@ import {required, helpers} from '@vuelidate/validators'
 
 import {useAuthStore} from '@/stores/authStore'
 
-interface AddressSuggestion {
-  formatted: string
-  street_number?: string
-  street?: string
-  locality?: string
-  city?: string
-  region?: string
-  postcode?: string
-  lat?: number
-  lon?: number
-}
 
-const addressSuggestions = ref<any[]>([])  // or ref<Record<string, any>[]>([])
+const addressSuggestions = ref<any[]>([])
 
 // Pinia store
 const authStore = useAuthStore()
