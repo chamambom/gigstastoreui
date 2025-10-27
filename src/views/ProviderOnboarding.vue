@@ -396,7 +396,7 @@ const fetchAddressSuggestions = debounce(async () => {
   }
 
   try {
-    const res = await axios.get(`${API_BASE_URL}/api/v1/api/address/suggestions`, {
+    const res = await axios.get<AddressSuggestion[]>(`${API_BASE_URL}/api/v1/api/address/suggestions`, {
       params: {q: userAddressSearchInput.value, country_code: countryCode.value},
     })
     addressSuggestions.value = res.data
@@ -407,7 +407,7 @@ const fetchAddressSuggestions = debounce(async () => {
 }, 500)
 
 // Select address suggestion
-const selectAddressSuggestion = (suggestion: any) => {
+const selectAddressSuggestion = (suggestion: AddressSuggestion) => {
   userAddressSearchInput.value = suggestion.formatted
   addressSuggestions.value = []
 
