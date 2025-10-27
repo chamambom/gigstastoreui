@@ -52,7 +52,7 @@ export interface User {
     is_oauth_registered: boolean;
 
     // Roles and Provider Status
-    roles: ('user' | 'provider' | 'admin')[];
+    roles?: ('user' | 'provider' | 'admin')[];
     provider_status: 'not_applied' | 'pending' | 'approved' | 'rejected';
 
     // Profile Information
@@ -62,10 +62,10 @@ export interface User {
     tradingName?: string;
 
     // Nested Objects
-    oauth_accounts: OAuthAccount[];
-    address: Address;
-    location: GeoLocation;
-    onboarding_status: OnboardingStatus;
+    oauth_accounts?: OAuthAccount[];
+    address?: Address;
+    location?: GeoLocation;
+    onboarding_status?: Partial<OnboardingStatus>;
 
     // Dates
     created_at: string;

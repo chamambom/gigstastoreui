@@ -444,7 +444,7 @@ const handleSubmit = async () => {
     const err = error as any
     console.error(
         'Provider setup (Step 1) failed:',
-        err?.response?.data?.detail || err?.message || err
+        String(err?.response?.data?.detail || err?.message || err)
     )
   }
 }
