@@ -154,11 +154,13 @@
 import { ref, computed, onMounted } from 'vue'
 import { useStripeStore } from '@/stores/stripeStore'
 import type { Invoice, PaymentMethod } from '@/stores/stripeStore'
+import {useAuthStore} from "@/stores/authStore";
 
 // -----------------------------
 // State & Store
 // -----------------------------
 const stripeStore = useStripeStore()
+const authStore = useAuthStore()
 
 const isLoading = ref(true)
 const error = ref<string | null>(null)
@@ -169,8 +171,8 @@ const invoiceLimit = ref(5)
 // -----------------------------
 const invoices = computed<Invoice[]>(() => stripeStore.invoices)
 const hasInvoices = computed(() => stripeStore.hasInvoices) // use state directly
-const user = computed(() => stripeStore.user) // keep if you add user to stripeStore
-const isLoggedIn = computed(() => !!stripeStore.user) // adjust logic if needed
+const user = computed(() => authStore.user) // keep if you add user to stripeStore
+const isLoggedIn = computed(() => !!authStore.user) // adjust logic if needed
 
 // -----------------------------
 // Methods
