@@ -21,6 +21,7 @@ export function useAuthFlags() {
         currentUser: userRef, // Store getter 'currentUser' is extracted as a ref
         isAuthenticated,
         isVerified,
+        isSuper,
         isProvider,
         isSeeker,
         providerStatus,
@@ -112,6 +113,8 @@ export function useAuthFlags() {
         isProvider,
         isSeeker,
         isProvisional,
+        isSuper,
+        isVerified,
 
         // Onboarding Flags
         hasBasicProfile,

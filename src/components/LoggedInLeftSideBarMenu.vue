@@ -36,7 +36,7 @@
                   Products</h3>
                 <span v-if="currentUserPlan?.services_used > 0"
                       class="px-3 py-1 bg-orange-400/10 text-orange-400 rounded-full text-xs font-medium border border-orange-400/20">
-                  {{ currentUserPlan.services_used }}
+                  {{ currentUserPlan?.services_used }}
                 </span>
               </div>
             </div>
@@ -79,8 +79,8 @@
                 <div>
                   <h4 class="font-semibold text-sm text-base-content mb-1">Limit Reached</h4>
                   <p class="text-sm text-base-content/60">{{
-                      currentUserPlan?.services_used
-                    }}/{{ currentUserPlan?.limit }} products used</p>
+                      currentUserPlan.services_used ?? 0
+                    }}/{{ currentUserPlan?.limit ?? 'N/A' }} products used</p>
                 </div>
               </div>
 
@@ -242,15 +242,15 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import { useAuthFlags } from '@/composables/useAuthFlags'
+import {computed, onMounted} from 'vue'
+import {useRouter} from 'vue-router'
+import {useAuthFlags} from '@/composables/useAuthFlags'
+import {storeToRefs} from 'pinia';
 
 // ✅ Import your Pinia stores
 // import { useBookingStore } from '@/stores/bookingStore'
-// import { useSubscriptionStore } from '@/stores/subscriptionStore'
-import { useAuthStore } from '@/stores/authStore'
-import {useStripeStore} from "@/stores/stripeStore.ts";
+import {useAuthStore} from '@/stores/authStore'
+import {useStripeStore} from "@/stores/stripeStore";
 
 const router = useRouter()
 
@@ -275,19 +275,23 @@ const {
 // ✅ Pinia stores
 const authStore = useAuthStore()
 // const bookingStore = useBookingStore()
-const subscriptionStore = useStripeStore()
+const stripeStore = useStripeStore()
 
 // Computed data from stores
-const currentUserPlan = computed(() => subscriptionStore.currentPlan)
-const upgradeOptions = computed(() => subscriptionStore.upgradeOptions)
-const downgradeOptions = computed(() => subscriptionStore.downgradeOptions)
+// const currentUserPlan = computed(() => stripeStore.currentPlan)
+
+const { getCurrentPlan } = storeToRefs(stripeStore);
+const currentUserPlan = getCurrentPlan; // This is a ComputedRef<Plan>
+
+const upgradeOptions = computed(() => stripeStore.upgradeOptions)
+const downgradeOptions = computed(() => stripeStore.downgradeOptions)
 // const providerCount = computed(() => bookingStore.providerBookingCount)
 //
 // // Lifecycle
 onMounted(async () => {
   if (isLoggedIn.value && currentUser.value) {
     // await bookingStore.fetchProviderBookingsCount()
-    await subscriptionStore.fetchUserSubscription()
+    await stripeStore.fetchUserSubscription()
   }
 })
 
