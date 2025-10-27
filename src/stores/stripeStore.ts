@@ -3,7 +3,6 @@ import axios from "axios";
 
 // --- INTERFACES ---
 // These define what shape (structure) your data should have.
-// They make your code safer and give you autocomplete support in VS Code.
 
 export interface PaymentMethod {
   id: string;
@@ -11,6 +10,7 @@ export interface PaymentMethod {
   last4?: string;
   exp_month?: number;
   exp_year?: number;
+  type?: string;
 }
 
 export interface Plan {
@@ -18,12 +18,21 @@ export interface Plan {
   name?: string;
   price?: number;
   currency?: string;
-  services_used?: number;      // <--- (Used for checking usage vs limit)
-  limit?: number;              // <--- (Maximum number of services allowed)
-  can_add_more?: boolean;      // <--- (Used to check if user can buy more)
-  _id?: string;                // <--- (Likely the database ID)
-  plan_price?: number;         // <--- (Price field used for display)
-  stripe_price_id?: string;    // <-
+  services_used?: number;
+  limit?: number;
+  can_add_more?: boolean;
+  _id?: string;
+  plan_price?: number;
+  stripe_price_id?: string;
+  perks?: string[];
+}
+
+// Interface for Invoice Line Items (Used inside Invoice interface)
+export interface InvoiceLine {
+  description: string;
+  amount: number;
+  currency: string;
+  // Add other necessary line item properties if you use them
 }
 
 export interface Invoice {
@@ -31,7 +40,28 @@ export interface Invoice {
   amount_due: number;
   status: string;
   created: string;
+
+  // 🛑 FIXES for Invoice (Error 1 & 2)
+  number?: string; // (Error 1, line 41)
+  currency?: string; // (Error 1, lines 62, 70)
+  amount_paid?: number; // (Error 1, lines 65, 66, 67, Error 2, line 195)
+  pdf_url?: string; // (Error 1, lines 92, 93)
+  hosted_invoice_url?: string; // (Error 1, lines 104, 105)
+
+  // Payment method can be a simple ID string or a complex object,
+  // defining it as string allows for simplicity, but if the backend
+  // sends an object, it needs its own interface (using string for now).
+  payment_method?: string | PaymentMethod | null; // (Error 1, lines 76, 81, 84)
+
+  // Use the nested InvoiceLine interface (Error 1, line 120, Error 2, line 131)
+  lines?: {
+    data: InvoiceLine[];
+    has_more: boolean;
+    object: 'list';
+    url: string;
+  };
 }
+
 
 interface StripeState {
   currentPlan: Plan;
@@ -44,7 +74,7 @@ interface StripeState {
   downgradeOptions: Plan[]; // Store downgrade options from backend
   blockedDowngradeOptions: Plan[];
   invoices: Invoice[]; // Holds fetched invoices
-  hasInvoices: boolean; // Tracks if user has any invoices
+  // hasInvoices: boolean; // Tracks if user has any invoices
 }
 
 // --- STORE DEFINITION ---
@@ -60,7 +90,7 @@ export const useStripeStore = defineStore("stripeStore", {
     downgradeOptions: [], // Store downgrade options from backend
     blockedDowngradeOptions: [],
     invoices: [], // Holds fetched invoices
-    hasInvoices: false // Tracks if user has any invoices
+    // hasInvoices: false // Tracks if user has any invoices
   }),
 
   getters: {
