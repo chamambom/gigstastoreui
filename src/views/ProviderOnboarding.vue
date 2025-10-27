@@ -288,7 +288,7 @@ const countryCode = ref('NZ')
 const phoneCountryCode = ref('+64')
 
 // Computed current user from Pinia store
-const currentUser = computed(() => authStore.user)
+const currentUser = computed(() => authStore.currentUser)
 
 // Custom validator for NZ/AU phone numbers
 const isMobileNumberValid = (value: string, phoneCountryCode: string) => {

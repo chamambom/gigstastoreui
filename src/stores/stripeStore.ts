@@ -27,39 +27,21 @@ export interface Plan {
   perks?: string[];
 }
 
-// Interface for Invoice Line Items (Used inside Invoice interface)
-export interface InvoiceLine {
-  description: string;
-  amount: number;
-  currency: string;
-  // Add other necessary line item properties if you use them
-}
-
 export interface Invoice {
+  // Core fields that should remain strictly typed for application logic
   id: string;
   amount_due: number;
   status: string;
   created: string;
 
-  // 🛑 FIXES for Invoice (Error 1 & 2)
-  number?: string; // (Error 1, line 41)
-  currency?: string; // (Error 1, lines 62, 70)
-  amount_paid?: number; // (Error 1, lines 65, 66, 67, Error 2, line 195)
-  pdf_url?: string; // (Error 1, lines 92, 93)
-  hosted_invoice_url?: string; // (Error 1, lines 104, 105)
-
-  // Payment method can be a simple ID string or a complex object,
-  // defining it as string allows for simplicity, but if the backend
-  // sends an object, it needs its own interface (using string for now).
-  payment_method?: string | PaymentMethod | null; // (Error 1, lines 76, 81, 84)
-
-  // Use the nested InvoiceLine interface (Error 1, line 120, Error 2, line 131)
-  lines?: {
-    data: InvoiceLine[];
-    has_more: boolean;
-    object: 'list';
-    url: string;
-  };
+  // Basic properties still defined, but optional
+  number?: string;
+  currency?: string;
+  amount_paid?: number;
+  pdf_url?: string;
+  hosted_invoice_url?: string;
+  payment_method?: any;
+  lines?: any;
 }
 
 
@@ -74,7 +56,7 @@ interface StripeState {
   downgradeOptions: Plan[]; // Store downgrade options from backend
   blockedDowngradeOptions: Plan[];
   invoices: Invoice[]; // Holds fetched invoices
-  // hasInvoices: boolean; // Tracks if user has any invoices
+  hasInvoices: boolean; // Tracks if user has any invoices
 }
 
 // --- STORE DEFINITION ---
@@ -90,7 +72,7 @@ export const useStripeStore = defineStore("stripeStore", {
     downgradeOptions: [], // Store downgrade options from backend
     blockedDowngradeOptions: [],
     invoices: [], // Holds fetched invoices
-    // hasInvoices: false // Tracks if user has any invoices
+    hasInvoices: false // Tracks if user has any invoices
   }),
 
   getters: {
@@ -103,7 +85,7 @@ export const useStripeStore = defineStore("stripeStore", {
     getUpgradeOptions: (state) => state.upgradeOptions,
     getDowngradeOptions: (state) => state.downgradeOptions,
     getBlockedDowngradeOptions: (state) => state.blockedDowngradeOptions,
-    getInvoices: (state) => state.invoices,
+    getInvoices: (state): Invoice[] => state.invoices,
     // hasInvoices: (state) => state.hasInvoices
   },
 
