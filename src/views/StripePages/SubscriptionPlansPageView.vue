@@ -111,7 +111,7 @@
                               class="btn btn-success btn-sm">
                         Confirm Upgrade
                       </button>
-                      <button @click="toggleUpgradeConfirm(null ?? '')"
+                      <button @click="toggleUpgradeConfirm('')"
                               class="btn btn-outline btn-sm">
                         Cancel
                       </button>
@@ -169,7 +169,7 @@
                               class="btn btn-info btn-sm">
                         Confirm Downgrade
                       </button>
-                      <button @click="toggleDowngradeConfirm(null ?? '')"
+                      <button @click="toggleDowngradeConfirm('')"
                               class="btn btn-outline btn-sm">
                         Cancel
                       </button>
@@ -521,9 +521,23 @@ const blockedDowngradeOptions = computed(() => stripeStore.blockedDowngradeOptio
 
 // const allSubscriptions = computed(() => stripeStore.allSubscriptions) // commented-out original
 
-// Service limit exponent mapping
-const exponentMap: Record<number, string> = { 1: "¹", 2: "²", 3: "³", 4: "⁴", 5: "⁵" }
-const serviceLimitExponent = computed(() => exponentMap[currentUserPlan.value.limit] || "")
+/// Service limit exponent mapping
+const exponentMap: Record<50 | 100 | 200, string> = {
+  50: "⁵⁰",
+  100: "¹⁰⁰",
+  200: "²⁰⁰",
+};
+
+const serviceLimitExponent = computed(() => {
+  const limit = currentUserPlan.value?.limit;
+
+  // Validate the limit before accessing the map
+  if (limit === 50 || limit === 100 || limit === 200) {
+    return exponentMap[limit];
+  }
+
+  return "";
+});
 
 // -----------------------------
 // Stripe Setup
@@ -550,33 +564,44 @@ const setupStripe = async () => {
 // Save New Card
 // -----------------------------
 const saveNewCard = async () => {
-  isProcessing.value = true
-  errorMessage.value = ""
-  successMessage.value = ""
+  isProcessing.value = true;
+  errorMessage.value = "";
+  successMessage.value = "";
 
   try {
-    const stripeInstance = await getStripe()
-    if (!stripeInstance) throw new Error("Stripe not initialized.")
+    const stripeInstance = await getStripe();
+    if (!stripeInstance) throw new Error("Stripe not initialized.");
 
     const { setupIntent, error } = await stripeInstance.confirmSetup({
       elements: elements.value,
       confirmParams: {},
       redirect: "if_required",
-    })
+    });
 
-    if (error) throw new Error(error.message || "Failed to confirm card setup.")
-    if (!setupIntent?.payment_method) throw new Error("Missing payment method ID.")
+    if (error) throw new Error(error.message || "Failed to confirm card setup.");
 
-    const message = await stripeStore.saveNewCard({ payment_method_id: setupIntent.payment_method ?? ''})
-    successMessage.value = message
-    useNewCard.value = false
-  } catch (error: any) {
-    console.error("Error saving card:", error)
-    errorMessage.value = error.message
+    const paymentMethodId = setupIntent?.payment_method;
+
+    // ✅ Type-safe check to ensure paymentMethodId is a string
+    if (typeof paymentMethodId !== "string") {
+      throw new Error("Missing or invalid payment method ID.");
+    }
+
+    const message = await stripeStore.saveNewCard({
+      payment_method_id: paymentMethodId,
+    });
+
+    successMessage.value = message;
+    useNewCard.value = false;
+  } catch (error: unknown) {
+    console.error("Error saving card:", error);
+    errorMessage.value =
+      error instanceof Error ? error.message : "An unexpected error occurred.";
   } finally {
-    isProcessing.value = false
+    isProcessing.value = false;
   }
-}
+};
+
 
 // -----------------------------
 // Subscription Upgrade/Downgrade
