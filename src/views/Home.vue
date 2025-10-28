@@ -161,325 +161,443 @@ const goToPage = (page: number) => {
 </script>
 
 <template>
-  <div class="min-h-screen">
+  <div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
 
-    <!-- Compact Hero - Only shows if no products loaded yet -->
+    <!-- Modern Hero Section -->
     <div
         v-if="!isLoading && sellerGroups.length > 0"
-        class="bg-gradient-to-r from-primary/10 to-secondary/10 border-b border-base-300"
+        class="relative overflow-hidden bg-gradient-to-br from-primary/5 via-orange-50/50 to-gray-50 border-b border-gray-200"
     >
-      <div class="max-w-7xl mx-auto px-4 py-6 flex flex-col md:flex-row items-center justify-between gap-4">
-        <div>
-          <h1 class="text-2xl font-bold">Discover, connect, and shop</h1>
-          <p class="text-sm text-orange-400 mt-1 font-semibold">
-            Your virtual mall to connect African small businesses with customers across Australia & New Zealand.
-          </p>
-
-          <!-- Product categories -->
-          <ul class="text-sm text-gray-700 mt-3 grid grid-cols-4 gap-x-6 gap-y-1">
-            <li>👗 African Fashion & Accessories</li>
-            <li>🧴 Hair & Beauty Products</li>
-            <li>🌿 Natural Skincare & Fragrances</li>
-            <li>🍲 Foods, Snacks & Spices</li>
-            <li>🎨 Cultural Art & Crafts</li>
-            <li>🏠 Home Decor & Textiles</li>
-            <li>📚 Books & Music</li>
-            <li>🎁 Gifts & Souvenirs</li>
-          </ul>
-        </div>
-
-        <router-link
-            to="/seller/products/create"
-            class="btn bg-orange-400 btn-sm shrink-0 text-white"
-        >
-          Create Virtual Shop
-        </router-link>
+      <!-- Decorative background elements -->
+      <div class="absolute inset-0 overflow-hidden pointer-events-none">
+        <div class="absolute -top-24 -right-24 w-96 h-96 bg-orange-400/5 rounded-full blur-3xl"></div>
+        <div class="absolute -bottom-24 -left-24 w-96 h-96 bg-primary/5 rounded-full blur-3xl"></div>
       </div>
-    </div>
 
-
-  <!-- Error state -->
-  <div v-if="hasError" class="alert alert-error m-4" role="alert">
-    <svg class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4v2m0 0v2m0-6V9m0 0V7m0 0v2"/>
-    </svg>
-    <div>
-      <h3 class="font-bold">Failed to load</h3>
-      <div class="text-sm">{{ productStore.error }}</div>
-    </div>
-    <button class="btn btn-sm" @click="productStore.fetchAll()">Retry</button>
-  </div>
-
-  <!-- Loading skeleton -->
-  <div v-if="isLoading" class="flex gap-4 p-4">
-    <div class="w-80 space-y-2">
-      <div class="skeleton h-32 w-full"/>
-    </div>
-    <div class="flex-1 space-y-2">
-      <div class="skeleton h-24 w-full"/>
-      <div class="skeleton h-24 w-full"/>
-      <div class="skeleton h-24 w-full"/>
-    </div>
-  </div>
-
-  <!-- Main Layout -->
-  <div v-else-if="sellerGroups.length > 0" class="flex gap-4 p-4">
-
-    <!-- LEFT SIDEBAR: Filters -->
-    <div class="w-80 flex-shrink-0">
-      <div class="card bg-base-100 shadow-lg sticky top-4">
-        <div class="card-body p-4 space-y-3">
-          <div class="flex justify-between items-center">
-            <h2 class="font-bold text-xl">Filters</h2>
-            <button
-                @click="showFilters = !showFilters"
-                class="btn btn-sm btn-circle btn-ghost lg:hidden"
-                :class="{ 'btn-primary': activeFiltersCount > 0 }"
-            >
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
-              </svg>
-            </button>
-          </div>
-
-          <div :class="{ 'hidden lg:block': !showFilters }" class="space-y-3">
-            <!-- Search -->
-            <div class="form-control">
-              <label class="label py-1">
-                <span class="label-text text-xs font-semibold">Search</span>
-              </label>
-              <input
-                  v-model="filters.searchQuery"
-                  type="text"
-                  placeholder="Seller or product..."
-                  class="input input-bordered input-sm w-full"
-              />
-            </div>
-
-            <!-- City Filter -->
-            <div class="form-control">
-              <label class="label py-1">
-                <span class="label-text text-xs font-semibold">City</span>
-              </label>
-              <select v-model="filters.city" class="select select-bordered select-sm w-full">
-                <option value="">All Cities</option>
-                <option v-for="city in availableCities" :key="city" :value="city">
-                  {{ city }}
-                </option>
-              </select>
-            </div>
-
-            <!-- Category Filter -->
-            <div class="form-control">
-              <label class="label py-1">
-                <span class="label-text text-xs font-semibold">Category</span>
-              </label>
-              <select v-model="filters.category" class="select select-bordered select-sm w-full">
-                <option value="">All Categories</option>
-                <option v-for="cat in availableCategories" :key="cat" :value="cat">
-                  {{ cat }}
-                </option>
-              </select>
-            </div>
-
-            <!-- Rating Filter -->
-            <div class="form-control">
-              <label class="label py-1">
-                <span class="label-text text-xs font-semibold">Minimum Rating</span>
-              </label>
-              <div class="rating rating-sm">
-                <input type="radio" :value="0" v-model.number="filters.minRating" class="rating-hidden"/>
-                <input type="radio" :value="1" v-model.number="filters.minRating"
-                       class="mask mask-star-2 bg-orange-400"/>
-                <input type="radio" :value="2" v-model.number="filters.minRating"
-                       class="mask mask-star-2 bg-orange-400"/>
-                <input type="radio" :value="3" v-model.number="filters.minRating"
-                       class="mask mask-star-2 bg-orange-400"/>
-                <input type="radio" :value="4" v-model.number="filters.minRating"
-                       class="mask mask-star-2 bg-orange-400"/>
-                <input type="radio" :value="5" v-model.number="filters.minRating"
-                       class="mask mask-star-2 bg-orange-400"/>
+      <div class="relative max-w-7xl mx-auto px-6 py-10">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+          <div class="flex-1 space-y-4">
+            <!-- Main heading with subtle animation -->
+            <div class="space-y-2">
+              <h1 class="text-4xl md:text-5xl font-bold bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent leading-tight">
+                Discover, Connect & Shop
+              </h1>
+              <div class="flex items-center gap-2">
+                <div class="h-1 w-20 bg-gradient-to-r from-orange-400 to-primary rounded-full"></div>
+                <p class="text-orange-500 font-semibold text-sm tracking-wide">
+                  Your Virtual African Marketplace in NZ & AU.
+                </p>
               </div>
             </div>
 
-            <!-- Sort By -->
-            <div class="form-control">
-              <label class="label py-1">
-                <span class="label-text text-xs font-semibold">Sort By</span>
-              </label>
-              <select v-model="filters.sortBy" class="select select-bordered select-sm w-full">
-                <option value="name">Name (A-Z)</option>
-                <option value="rating">Highest Rated</option>
-                <option value="products">Most Products</option>
-              </select>
-            </div>
+            <p class="text-gray-600 text-base max-w-2xl leading-relaxed">
+              Scaling African Community small businesses across NZ & Australian markets.
+            </p>
 
-            <div class="divider my-1"/>
-
-            <!-- Clear button and results -->
-            <div class="flex justify-between items-center">
-                <span class="text-xs text-gray-600">
-                  {{ filteredSellerGroups.length }} sellers
-                </span>
-              <button
-                  v-if="activeFiltersCount > 0"
-                  @click="clearFilters"
-                  class="btn btn-ghost btn-xs"
-              >
-                Clear All
-              </button>
+            <!-- Modern category pills -->
+            <div class="flex flex-wrap gap-2 pt-2">
+              <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white rounded-full text-xs font-medium text-gray-700 shadow-sm border border-gray-200 hover:shadow-md transition-all duration-200">
+                <i class="fas fa-tshirt text-orange-400"></i>
+                Fashion & Accessories
+              </span>
+              <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white rounded-full text-xs font-medium text-gray-700 shadow-sm border border-gray-200 hover:shadow-md transition-all duration-200">
+                <i class="fas fa-pump-soap text-orange-400"></i>
+                Hair & Beauty
+              </span>
+              <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white rounded-full text-xs font-medium text-gray-700 shadow-sm border border-gray-200 hover:shadow-md transition-all duration-200">
+                <i class="fas fa-leaf text-orange-400"></i>
+                Natural Skincare
+              </span>
+              <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white rounded-full text-xs font-medium text-gray-700 shadow-sm border border-gray-200 hover:shadow-md transition-all duration-200">
+                <i class="fas fa-drumstick-bite text-orange-400"></i>
+                Foods & Spices
+              </span>
+              <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white rounded-full text-xs font-medium text-gray-700 shadow-sm border border-gray-200 hover:shadow-md transition-all duration-200">
+                <i class="fas fa-palette text-orange-400"></i>
+                Art & Crafts
+              </span>
+              <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white rounded-full text-xs font-medium text-gray-700 shadow-sm border border-gray-200 hover:shadow-md transition-all duration-200">
+                <i class="fas fa-couch text-orange-400"></i>
+                Home Decor
+              </span>
+              <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white rounded-full text-xs font-medium text-gray-700 shadow-sm border border-gray-200 hover:shadow-md transition-all duration-200">
+                <i class="fas fa-book text-orange-400"></i>
+                Books & Music
+              </span>
+              <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white rounded-full text-xs font-medium text-gray-700 shadow-sm border border-gray-200 hover:shadow-md transition-all duration-200">
+                <i class="fas fa-gift text-orange-400"></i>
+                Gifts & Souvenirs
+              </span>
             </div>
           </div>
+
+          <!-- CTA Button -->
+          <router-link
+              to="/seller/products/create"
+              class="group relative px-6 py-3 bg-gradient-to-r from-orange-400 to-orange-500 text-white font-semibold rounded-xl shadow-lg shadow-orange-400/25 hover:shadow-xl hover:shadow-orange-400/40 transition-all duration-300 hover:-translate-y-0.5 flex items-center gap-2"
+          >
+            <i class="fas fa-store text-sm"></i>
+            <span>Create Virtual Shop</span>
+            <i class="fas fa-arrow-right text-xs group-hover:translate-x-1 transition-transform"></i>
+          </router-link>
         </div>
       </div>
     </div>
 
-    <!-- RIGHT CONTENT: Sellers List -->
-    <div class="flex-1 space-y-3">
-
-      <!-- Seller Cards -->
-      <div
-          v-for="group in paginatedSellerGroups"
-          :key="group.sellerId"
-          class="card bg-base-100 shadow-lg hover:shadow-xl transition-shadow"
-      >
-        <!-- Seller Header (Clickable) -->
-        <div
-            @click="toggleSeller(group.sellerId)"
-            class="card-body p-5 cursor-pointer hover:bg-base-200/50 transition-colors"
-        >
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-4 flex-1">
-              <!-- Avatar -->
-              <div class="avatar placeholder">
-                <div class="bg-primary text-primary-content rounded-full w-14">
-                  <span class="text-xl">{{ group.seller.tradingName.charAt(0) }}</span>
-                </div>
-              </div>
-
-              <!-- Seller Info -->
-              <div class="flex-1 min-w-0">
-                <h3 class="text-2xl font-bold">{{ group.seller.tradingName }}</h3>
-
-                <div class="flex flex-wrap gap-3 mt-1 text-sm">
-                  <!-- Location -->
-                  <div v-if="group.seller.address" class="flex items-center gap-1 text-gray-600">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                    </svg>
-                    <span>{{ group.seller.address.locality }}, {{ group.seller.address.city }}</span>
-                  </div>
-
-                  <!-- Rating -->
-                  <div v-if="group.seller.overallProviderRating" class="flex items-center gap-1">
-                    <div class="rating rating-xs">
-                      <input type="radio" class="mask mask-star-2 bg-orange-400" disabled
-                             :checked="group.seller.overallProviderRating >= 1"/>
-                      <input type="radio" class="mask mask-star-2 bg-orange-400" disabled
-                             :checked="group.seller.overallProviderRating >= 2"/>
-                      <input type="radio" class="mask mask-star-2 bg-orange-400" disabled
-                             :checked="group.seller.overallProviderRating >= 3"/>
-                      <input type="radio" class="mask mask-star-2 bg-orange-400" disabled
-                             :checked="group.seller.overallProviderRating >= 4"/>
-                      <input type="radio" class="mask mask-star-2 bg-orange-400" disabled
-                             :checked="group.seller.overallProviderRating >= 5"/>
-                    </div>
-                    <span class="font-semibold">{{ group.seller.overallProviderRating.toFixed(1) }}</span>
-                    <span class="text-gray-600">({{ group.seller.totalProviderReviews || 0 }})</span>
-                  </div>
-
-                  <!-- Product count -->
-                  <div class="badge badge-primary badge-outline">
-                    {{ group.products.length }} Products
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Expand/Collapse Icon -->
-            <div class="flex-shrink-0">
-              <svg
-                  class="w-6 h-6 transition-transform duration-200"
-                  :class="{ 'rotate-180': isExpanded(group.sellerId) }"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-              >
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-              </svg>
-            </div>
+    <!-- Error State with modern design -->
+    <div v-if="hasError" class="max-w-2xl mx-auto mt-8 px-4">
+      <div class="bg-red-50 border border-red-200 rounded-2xl p-6 shadow-sm">
+        <div class="flex items-start gap-4">
+          <div class="flex-shrink-0">
+            <i class="fas fa-exclamation-circle text-red-500 text-2xl"></i>
           </div>
-        </div>
-
-        <!-- Collapsible Products Grid -->
-        <div
-            v-show="isExpanded(group.sellerId)"
-            class="px-5 pb-5"
-        >
-          <div class="divider mt-0"/>
-          <div class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            <ProductCard
-                v-for="product in group.products"
-                :key="product._id"
-                :product="product"
-            />
+          <div class="flex-1">
+            <h3 class="font-bold text-red-900 mb-1">Failed to load</h3>
+            <p class="text-sm text-red-700">{{ productStore.error }}</p>
           </div>
-        </div>
-      </div>
-
-      <!-- Empty state -->
-      <div v-if="paginatedSellerGroups.length === 0" class="card bg-base-100 shadow-lg">
-        <div class="card-body text-center py-12">
-          <svg class="mx-auto h-16 w-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
-          </svg>
-          <p class="text-gray-500 mt-4 mb-2">No sellers match your filters</p>
-          <button @click="clearFilters" class="btn btn-sm btn-ghost">
-            Clear Filters
+          <button
+            class="btn btn-sm bg-red-100 border-red-200 text-red-700 hover:bg-red-200"
+            @click="productStore.fetchAll()"
+          >
+            <i class="fas fa-redo text-xs mr-1"></i>
+            Retry
           </button>
         </div>
       </div>
+    </div>
 
-      <!-- Pagination -->
-      <div v-if="totalPages > 1" class="card bg-base-100 shadow">
-        <div class="card-body p-4">
-          <div class="join w-full">
-            <button
-                class="join-item btn flex-1"
-                :disabled="currentPage === 1"
-                @click="goToPage(currentPage - 1)"
-            >
-              ‹ Previous
-            </button>
-            <button class="join-item btn flex-1" disabled>
-              Page {{ currentPage }} of {{ totalPages }}
-            </button>
-            <button
-                class="join-item btn flex-1"
-                :disabled="currentPage === totalPages"
-                @click="goToPage(currentPage + 1)"
-            >
-              Next ›
-            </button>
-          </div>
+    <!-- Modern Loading Skeleton -->
+    <div v-if="isLoading" class="max-w-7xl mx-auto px-4 py-8">
+      <div class="flex gap-6">
+        <div class="w-80 space-y-3">
+          <div class="bg-gray-200 rounded-2xl h-64 animate-pulse"></div>
+        </div>
+        <div class="flex-1 space-y-4">
+          <div class="bg-gray-200 rounded-2xl h-32 animate-pulse"></div>
+          <div class="bg-gray-200 rounded-2xl h-32 animate-pulse"></div>
+          <div class="bg-gray-200 rounded-2xl h-32 animate-pulse"></div>
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- Empty state -->
-  <div v-else class="text-center py-12">
-    <svg class="mx-auto h-24 w-24 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
-    </svg>
-    <p class="text-gray-500 mb-4 mt-4">No sellers found</p>
-    <button class="btn btn-primary" @click="productStore.fetchAll()">
-      Refresh
-    </button>
-  </div>
+    <!-- Main Content Layout -->
+    <div v-else-if="sellerGroups.length > 0" class="max-w-7xl mx-auto px-4 py-6">
+      <div class="flex gap-6">
+
+        <!-- LEFT SIDEBAR: Modern Filters -->
+        <aside class="w-80 flex-shrink-0">
+          <div class="bg-white rounded-2xl shadow-sm border border-gray-200 sticky top-6 overflow-hidden">
+            <!-- Filter Header -->
+            <div class="bg-gradient-to-br from-gray-50 to-white px-5 py-4 border-b border-gray-200">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <i class="fas fa-filter text-gray-600"></i>
+                  <h2 class="font-bold text-lg text-gray-900">Filters</h2>
+                </div>
+                <button
+                    @click="showFilters = !showFilters"
+                    class="lg:hidden btn btn-sm btn-circle btn-ghost"
+                    :class="{ 'bg-orange-100 text-orange-600': activeFiltersCount > 0 }"
+                >
+                  <i class="fas fa-sliders-h text-sm"></i>
+                </button>
+              </div>
+            </div>
+
+            <div :class="{ 'hidden lg:block': !showFilters }" class="p-5 space-y-5">
+              <!-- Search Input with icon -->
+              <div class="form-control">
+                <label class="label pb-2">
+                  <span class="label-text text-xs font-semibold text-gray-700 uppercase tracking-wide">Search</span>
+                </label>
+                <div class="relative">
+                  <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+                  <input
+                      v-model="filters.searchQuery"
+                      type="text"
+                      placeholder="Find sellers or products..."
+                      class="input input-bordered w-full pl-10 bg-gray-50 border-gray-200 focus:bg-white focus:border-orange-400 transition-colors rounded-xl"
+                  />
+                </div>
+              </div>
+
+              <!-- City Filter -->
+              <div class="form-control">
+                <label class="label pb-2">
+                  <span class="label-text text-xs font-semibold text-gray-700 uppercase tracking-wide flex items-center gap-1.5">
+                    <i class="fas fa-map-marker-alt text-orange-400"></i>
+                    City
+                  </span>
+                </label>
+                <div class="relative">
+                  <select
+                    v-model="filters.city"
+                    class="select select-bordered w-full bg-gray-50 border-gray-200 focus:bg-white focus:border-orange-400 transition-colors rounded-xl appearance-none pr-10"
+                  >
+                    <option value="">All Cities</option>
+                    <option v-for="city in availableCities" :key="city" :value="city">
+                      {{ city }}
+                    </option>
+                  </select>
+                  <i class="fas fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs pointer-events-none"></i>
+                </div>
+              </div>
+
+              <!-- Category Filter -->
+              <div class="form-control">
+                <label class="label pb-2">
+                  <span class="label-text text-xs font-semibold text-gray-700 uppercase tracking-wide flex items-center gap-1.5">
+                    <i class="fas fa-tags text-orange-400"></i>
+                    Category
+                  </span>
+                </label>
+                <div class="relative">
+                  <select
+                    v-model="filters.category"
+                    class="select select-bordered w-full bg-gray-50 border-gray-200 focus:bg-white focus:border-orange-400 transition-colors rounded-xl appearance-none pr-10"
+                  >
+                    <option value="">All Categories</option>
+                    <option v-for="cat in availableCategories" :key="cat" :value="cat">
+                      {{ cat }}
+                    </option>
+                  </select>
+                  <i class="fas fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs pointer-events-none"></i>
+                </div>
+              </div>
+
+              <!-- Rating Filter -->
+              <div class="form-control">
+                <label class="label pb-2">
+                  <span class="label-text text-xs font-semibold text-gray-700 uppercase tracking-wide flex items-center gap-1.5">
+                    <i class="fas fa-star text-orange-400"></i>
+                    Minimum Rating
+                  </span>
+                </label>
+                <div class="flex items-center gap-1 p-3 bg-gray-50 rounded-xl border border-gray-200">
+                  <div class="rating rating-md gap-1">
+                    <input type="radio" :value="0" v-model.number="filters.minRating" class="rating-hidden"/>
+                    <input type="radio" :value="1" v-model.number="filters.minRating"
+                           class="mask mask-star-2 bg-orange-400"/>
+                    <input type="radio" :value="2" v-model.number="filters.minRating"
+                           class="mask mask-star-2 bg-orange-400"/>
+                    <input type="radio" :value="3" v-model.number="filters.minRating"
+                           class="mask mask-star-2 bg-orange-400"/>
+                    <input type="radio" :value="4" v-model.number="filters.minRating"
+                           class="mask mask-star-2 bg-orange-400"/>
+                    <input type="radio" :value="5" v-model.number="filters.minRating"
+                           class="mask mask-star-2 bg-orange-400"/>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Sort By -->
+              <div class="form-control">
+                <label class="label pb-2">
+                  <span class="label-text text-xs font-semibold text-gray-700 uppercase tracking-wide flex items-center gap-1.5">
+                    <i class="fas fa-sort-amount-down text-orange-400"></i>
+                    Sort By
+                  </span>
+                </label>
+                <div class="relative">
+                  <select
+                    v-model="filters.sortBy"
+                    class="select select-bordered w-full bg-gray-50 border-gray-200 focus:bg-white focus:border-orange-400 transition-colors rounded-xl appearance-none pr-10"
+                  >
+                    <option value="name">Name (A-Z)</option>
+                    <option value="rating">Highest Rated</option>
+                    <option value="products">Most Products</option>
+                  </select>
+                  <i class="fas fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs pointer-events-none"></i>
+                </div>
+              </div>
+
+              <!-- Results & Clear -->
+              <div class="pt-3 border-t border-gray-200">
+                <div class="flex justify-between items-center">
+                  <div class="flex items-center gap-2">
+                    <div class="h-2 w-2 rounded-full bg-orange-400 animate-pulse"></div>
+                    <span class="text-sm font-semibold text-gray-900">
+                      {{ filteredSellerGroups.length }}
+                    </span>
+                    <span class="text-sm text-gray-600">sellers found</span>
+                  </div>
+                  <button
+                      v-if="activeFiltersCount > 0"
+                      @click="clearFilters"
+                      class="text-xs font-medium text-orange-600 hover:text-orange-700 flex items-center gap-1 transition-colors"
+                  >
+                    <i class="fas fa-times-circle"></i>
+                    Clear All
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        <!-- RIGHT CONTENT: Sellers List -->
+        <main class="flex-1 space-y-4">
+
+          <!-- Seller Cards with modern design -->
+          <article
+              v-for="group in paginatedSellerGroups"
+              :key="group.sellerId"
+              class="bg-white rounded-2xl shadow-sm border border-gray-200 hover:shadow-md transition-all duration-300 overflow-hidden group"
+          >
+            <!-- Seller Header (Clickable) -->
+            <div
+                @click="toggleSeller(group.sellerId)"
+                class="p-6 cursor-pointer hover:bg-gray-50/50 transition-colors"
+            >
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-5 flex-1 min-w-0">
+                  <!-- Modern Avatar with gradient -->
+                  <div class="relative flex-shrink-0">
+                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-orange-400 to-primary flex items-center justify-center text-white text-2xl font-bold shadow-md">
+                      {{ group.seller.tradingName.charAt(0) }}
+                    </div>
+                    <div class="absolute -bottom-1 -right-1 w-5 h-5 bg-green-400 rounded-full border-2 border-white"></div>
+                  </div>
+
+                  <!-- Seller Info -->
+                  <div class="flex-1 min-w-0">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-2 truncate">
+                      {{ group.seller.tradingName }}
+                    </h3>
+
+                    <div class="flex flex-wrap items-center gap-4 text-sm">
+                      <!-- Location -->
+                      <div v-if="group.seller.address" class="flex items-center gap-1.5 text-gray-600">
+                        <i class="fas fa-map-marker-alt text-orange-400"></i>
+                        <span class="font-medium">{{ group.seller.address.locality }}, {{ group.seller.address.city }}</span>
+                      </div>
+
+                      <!-- Rating -->
+                      <div v-if="group.seller.overallProviderRating" class="flex items-center gap-2 px-3 py-1 bg-orange-50 rounded-full">
+                        <div class="rating rating-xs gap-0.5">
+                          <input type="radio" class="mask mask-star-2 bg-orange-400" disabled
+                                 :checked="group.seller.overallProviderRating >= 1"/>
+                          <input type="radio" class="mask mask-star-2 bg-orange-400" disabled
+                                 :checked="group.seller.overallProviderRating >= 2"/>
+                          <input type="radio" class="mask mask-star-2 bg-orange-400" disabled
+                                 :checked="group.seller.overallProviderRating >= 3"/>
+                          <input type="radio" class="mask mask-star-2 bg-orange-400" disabled
+                                 :checked="group.seller.overallProviderRating >= 4"/>
+                          <input type="radio" class="mask mask-star-2 bg-orange-400" disabled
+                                 :checked="group.seller.overallProviderRating >= 5"/>
+                        </div>
+                        <span class="font-bold text-gray-900">{{ group.seller.overallProviderRating.toFixed(1) }}</span>
+                        <span class="text-gray-500">({{ group.seller.totalProviderReviews || 0 }})</span>
+                      </div>
+
+                      <!-- Product count badge -->
+                      <div class="inline-flex items-center gap-1.5 px-3 py-1 bg-primary/10 text-primary rounded-full font-medium">
+                        <i class="fas fa-box text-xs"></i>
+                        <span>{{ group.products.length }} Products</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Expand/Collapse Icon with animation -->
+                <div class="flex-shrink-0 ml-4">
+                  <div class="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center group-hover:bg-gray-200 transition-colors">
+                    <i
+                      class="fas fa-chevron-down text-gray-600 transition-transform duration-300"
+                      :class="{ 'rotate-180': isExpanded(group.sellerId) }"
+                    ></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Collapsible Products Grid -->
+            <div
+                v-show="isExpanded(group.sellerId)"
+                class="border-t border-gray-100"
+            >
+              <div class="p-6 bg-gray-50/30">
+                <div class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                  <ProductCard
+                      v-for="product in group.products"
+                      :key="product._id"
+                      :product="product"
+                  />
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Modern Empty State -->
+          <div v-if="paginatedSellerGroups.length === 0" class="bg-white rounded-2xl shadow-sm border border-gray-200">
+            <div class="text-center py-16 px-6">
+              <div class="inline-flex items-center justify-center w-20 h-20 bg-gray-100 rounded-full mb-4">
+                <i class="fas fa-search text-3xl text-gray-400"></i>
+              </div>
+              <h3 class="text-xl font-bold text-gray-900 mb-2">No sellers found</h3>
+              <p class="text-gray-600 mb-6 max-w-sm mx-auto">
+                We couldn't find any sellers matching your filters. Try adjusting your search criteria.
+              </p>
+              <button
+                @click="clearFilters"
+                class="btn bg-gradient-to-r from-orange-400 to-orange-500 text-white border-none hover:shadow-lg transition-all"
+              >
+                <i class="fas fa-redo text-xs mr-2"></i>
+                Clear All Filters
+              </button>
+            </div>
+          </div>
+
+          <!-- Modern Pagination -->
+          <div v-if="totalPages > 1" class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+            <div class="p-4">
+              <div class="flex items-center justify-between gap-4">
+                <button
+                    class="btn flex-1 bg-gray-50 border-gray-200 hover:bg-gray-100 disabled:bg-gray-100 disabled:text-gray-400 rounded-xl"
+                    :disabled="currentPage === 1"
+                    @click="goToPage(currentPage - 1)"
+                >
+                  <i class="fas fa-chevron-left text-xs mr-2"></i>
+                  Previous
+                </button>
+                <div class="flex items-center gap-2 px-4 py-2 bg-orange-50 rounded-xl">
+                  <span class="text-sm font-semibold text-gray-900">Page {{ currentPage }}</span>
+                  <span class="text-sm text-gray-600">of</span>
+                  <span class="text-sm font-semibold text-gray-900">{{ totalPages }}</span>
+                </div>
+                <button
+                    class="btn flex-1 bg-gray-50 border-gray-200 hover:bg-gray-100 disabled:bg-gray-100 disabled:text-gray-400 rounded-xl"
+                    :disabled="currentPage === totalPages"
+                    @click="goToPage(currentPage + 1)"
+                >
+                  Next
+                  <i class="fas fa-chevron-right text-xs ml-2"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <!-- Modern Empty State (no sellers at all) -->
+    <div v-else class="max-w-2xl mx-auto px-4 py-16">
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-200 text-center py-16 px-6">
+        <div class="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-orange-100 to-primary/10 rounded-full mb-6">
+          <i class="fas fa-store text-4xl text-orange-400"></i>
+        </div>
+        <h3 class="text-2xl font-bold text-gray-900 mb-3">No Sellers Available</h3>
+        <p class="text-gray-600 mb-8 max-w-md mx-auto">
+          There are currently no sellers in the marketplace. Check back soon or be the first to create a shop!
+        </p>
+        <button
+          class="btn bg-gradient-to-r from-orange-400 to-orange-500 text-white border-none hover:shadow-lg transition-all"
+          @click="productStore.fetchAll()"
+        >
+          <i class="fas fa-sync-alt text-sm mr-2"></i>
+          Refresh Page
+        </button>
+      </div>
+    </div>
   </div>
 </template>

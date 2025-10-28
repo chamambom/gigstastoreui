@@ -1,14 +1,10 @@
-<!--Nav component-->
 <template>
   <section
       class="navbar min-h-20 px-6 sm:px-25 text-base-content relative z-50 bg-base-100 border-b border-base-300"
   >
     <div class="relative z-10 flex w-full items-center max-w-screen-2xl mx-auto">
 
-      <!-- 1. NAVBAR START: Drawer, Logo, My Products, and Cart -->
-      <!-- FIX: Removed flex-1 so this section only takes the space it needs, ensuring space for navbar-center -->
-      <div class="navbar-start flex items-center space-x-2 sm:space-x-3">
-        <!-- Drawer Button -->
+      <div class="navbar-start flex items-center space-x-2 sm:space-x-3 flex-1 min-w-0">
         <div class="flex-none lg:hidden">
           <label for="left-sidebar-drawer" class="btn btn-square btn-ghost hover:bg-base-200">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -18,17 +14,16 @@
           </label>
         </div>
 
-        <!-- Logo/Branding -->
         <div class="flex items-center space-x-3 flex-shrink-0">
           <div class="avatar">
             <div class="w-10 rounded-full bg-gradient-to-r from-primary to-secondary p-0.5">
-              <img src="../assets/images/banner.png" alt="GigSta community"
+              <img src="../assets/images/banner.png" alt="GigStaStore community"
                    class="w-full h-full rounded-full object-contain bg-base-100"/>
             </div>
           </div>
           <router-link to="/" class="flex items-center">
             <div class="font-semibold text-xl sm:text-2xl md:text-3xl tracking-tight">
-              <span class="text-purple-800">GigSta</span><span class="text-orange-400">Store</span>
+              <span class="text-primary">GigSta</span><span class="text-orange-400">Store</span>
             </div>
           </router-link>
         </div>
@@ -37,7 +32,6 @@
             class="divider divider-horizontal before:bg-base-300 after:bg-base-300 mx-2 sm:mx-3 opacity-50 flex-shrink-0 hidden sm:block">
         </div>
 
-        <!-- My Products (Hidden until XL screen) -->
         <router-link v-if="isLoggedIn" class="btn btn-ghost btn-sm rounded-btn hidden xl:flex" to="/seller/products">
           <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -46,15 +40,14 @@
           My Products
         </router-link>
 
-        <!-- Cart (Kept at the start) -->
-        <router-link to="/cart"
-                     class="btn btn-ghost btn-sm sm:btn-md rounded-btn font-semibold hover:bg-base-200 transition-all duration-200 relative z-30 flex-shrink-0">
-          Cart
-          <div class="badge ml-2 badge-outline" v-text="count"/>
+        <router-link v-if="canAccessProviderDashboard"
+                     to="/provider-dashboard"
+                     class="btn btn-ghost btn-sm sm:btn-md rounded-btn font-semibold hover:bg-base-200 transition-all duration-200 relative z-30 flex-shrink-0 hidden xl:flex">
+            <i class="fas fa-tachometer-alt text-base-content/70 text-sm w-4"></i>
+            Seller Dashboard
         </router-link>
       </div>
 
-      <!-- 2. NAVBAR CENTER: Product Search Bar -->
       <div class="navbar-center hidden md:flex flex-1 max-w-xl px-4">
         <div class="w-full">
           <Search/>
@@ -62,48 +55,14 @@
       </div>
 
 
-      <!-- 3. NAVBAR END: Menu, Verification, Sign In/Up, and Theme Toggle -->
       <div class="navbar-end flex items-center space-x-2 sm:space-x-3 flex-shrink-0">
 
-        <!-- User Menu Dropdown -->
-        <div class="dropdown dropdown-end relative z-50" v-show="isLoggedIn && !needsEmailVerification">
-          <div tabindex="0" role="button"
-               class="btn btn-ghost btn-sm sm:btn-md px-2 sm:px-3 font-semibold text-base-content/60 hover:bg-base-200 rounded-xl transition-all duration-200 relative z-30">
-            Menu <i class="fas fa-chevron-down text-xs ml-1"></i>
-          </div>
-          <ul tabindex="0"
-              class="menu dropdown-content mt-2 p-3 bg-base-100 border border-base-300 text-base-content rounded-xl w-48 shadow-lg z-[9999] focus:outline-none">
-            <li v-show="!isProvisional">
-              <router-link :to="canAccessProviderDashboard ? '/provider-dashboard' : '/seeker-dashboard'"
-                           class="flex items-center gap-3 p-2 hover:bg-purple-800/10 hover:text-purple-800 rounded-lg transition-colors">
-                <i class="fas fa-tachometer-alt text-base-content/70 text-sm w-4"></i>
-                {{ canAccessProviderDashboard ? 'Seller Dashboard' : 'Dashboard' }}
-              </router-link>
-            </li>
-            <li v-show="!(isProvider && (isProviderApproved || isProviderPending))">
-              <router-link to="/bookings"
-                           class="flex items-center gap-3 p-2 hover:bg-base-200/70 rounded-lg transition-colors">
-                <i class="fas fa-calendar-alt text-base-content/70 text-sm w-4"></i> Bookings
-              </router-link>
-            </li>
-            <li v-show="!(isProvider && (isProviderApproved || isProviderPending))">
-              <router-link to="/listratings"
-                           class="flex items-center gap-3 p-2 hover:bg-base-200/70 rounded-lg transition-colors">
-                <i class="fas fa-star text-base-content/70 text-sm w-4"></i> Ratings
-              </router-link>
-            </li>
+        <router-link to="/cart"
+                     class="btn btn-ghost btn-sm sm:btn-md rounded-btn font-semibold hover:bg-base-200 transition-all duration-200 relative z-30 flex-shrink-0">
+          Cart
+          <div class="badge ml-2 badge-outline" v-text="count"/>
+        </router-link>
 
-            <li>
-              <button @click="logout"
-                      class="flex items-center gap-3 p-2 hover:bg-error/10 hover:text-error rounded-lg transition-colors w-full text-left">
-                <i class="fas fa-sign-out-alt text-base-content/70 text-sm w-4"></i>
-                **Log Out**
-              </button>
-            </li>
-          </ul>
-        </div>
-
-        <!-- Email Verification Status -->
         <div v-show="isLoggedIn && needsEmailVerification" class="flex items-center space-x-2 flex-shrink-0">
           <span
               class="badge bg-orange-400/10 text-orange-400 border text-base-content border-orange-400/20 text-xs px-3 py-2 rounded-lg relative z-30">Email Unverified</span>
@@ -113,19 +72,117 @@
           </router-link>
         </div>
 
-        <!-- Sign In/Up Buttons (MOVED to navbar-end) -->
-        <div v-show="!isLoggedIn" class="flex items-center space-x-2 sm:space-x-3">
-          <router-link to="/login"
-                       class="btn btn-sm sm:btn-md bg-base-100 rounded-md text-base-content font-semibold border-none hover:bg-base-300 font-medium transition-all duration-200 relative z-50">
+
+        <div v-if="!isLoggedIn" class="flex items-center space-x-2 sm:space-x-3">
+          <router-link
+              to="/login"
+              class="btn btn-sm sm:btn-md bg-base-100 rounded-md text-base-content font-semibold border-none hover:bg-base-300 font-medium transition-all duration-200 relative z-50"
+          >
             Sign In
           </router-link>
-          <router-link to="/signup"
-                       class="btn btn-sm sm:btn-md bg-purple-800 text-white font-semibold rounded-md border-none hover:bg-purple-900 font-medium transition-all duration-200 relative z-50">
-            Start Selling
+
+          <router-link
+              to="/signup"
+              class="btn btn-sm sm:btn-md bg-primary text-white font-semibold rounded-md border-none hover:bg-purple-900 font-medium transition-all duration-200 relative z-50"
+          >
+            Sign up to Start Selling
           </router-link>
         </div>
 
-        <!-- Theme Toggle (MOVED to navbar-end) -->
+        <div v-else class="dropdown dropdown-end relative z-50">
+          <div
+              tabindex="0"
+              role="button"
+              class="flex items-center gap-2 cursor-pointer p-2 hover:bg-base-200/50 rounded-xl transition-all duration-200 relative z-50"
+          >
+            <div
+                class="w-8 h-8 bg-base-300 rounded-lg flex items-center justify-center"
+            >
+              <i class="fas fa-user text-base-content/70 text-sm"></i>
+            </div>
+            <i class="fas fa-chevron-down text-xs text-base-content/60"></i>
+          </div>
+          <ul
+              tabindex="0"
+              class="menu dropdown-content mt-2 p-4 bg-base-100 border border-base-300 text-base-content rounded-xl w-56 shadow-lg z-[9999] focus:outline-none"
+          >
+            <li class="mb-2">
+              <div
+                  class="flex items-center gap-3 p-2 bg-base-200/50 rounded-lg pointer-events-none"
+              >
+                <div
+                    class="w-8 h-8 bg-purple-800/10 rounded-lg flex items-center justify-center"
+                >
+                  <i class="fas fa-user text-purple-800 text-sm"></i>
+                </div>
+                <div>
+                  <p class="font-medium text-sm text-base-content">Kia Ora!</p>
+                  <p class="text-xs text-base-content/60 truncate">
+                    {{ currentUser?.email || 'currentUser' }}
+                  </p>
+                </div>
+              </div>
+            </li>
+
+            <li v-if="!canAccessProviderDashboard && !isProvisional">
+                <router-link to="/seeker-dashboard"
+                            class="flex items-center gap-3 p-2 hover:bg-purple-800/10 hover:text-purple-800 rounded-lg transition-colors">
+                    <i class="fas fa-tachometer-alt text-base-content/70 text-sm w-4"></i>
+                    Dashboard
+                </router-link>
+            </li>
+
+            <li v-show="!(isProvider && (isProviderApproved || isProviderPending))">
+                <router-link to="/bookings"
+                           class="flex items-center gap-3 p-2 hover:bg-base-200/70 rounded-lg transition-colors">
+                    <i class="fas fa-calendar-alt text-base-content/70 text-sm w-4"></i> Bookings
+                </router-link>
+            </li>
+            <li v-show="!(isProvider && (isProviderApproved || isProviderPending))">
+                <router-link to="/listratings"
+                           class="flex items-center gap-3 p-2 hover:bg-base-200/70 rounded-lg transition-colors">
+                    <i class="fas fa-star text-base-content/70 text-sm w-4"></i> Ratings
+                </router-link>
+            </li>
+
+            <div class="divider my-2"></div>
+
+            <li>
+              <router-link
+                  to="/account"
+                  class="flex items-center gap-3 p-2 hover:bg-base-200/70 rounded-lg transition-colors"
+              >
+                <i class="fas fa-user-cog text-base-content/70 text-sm w-4"></i>
+                Account Settings
+              </router-link>
+            </li>
+            <li v-if="canAccessProviderDashboard">
+              <router-link
+                  to="/subscription"
+                  class="flex items-center gap-3 p-2 hover:bg-orange-400/10 hover:text-orange-400 rounded-lg transition-colors"
+              >
+                <i class="fas fa-crown text-base-content/70 text-sm w-4"></i>
+                Upgrade Plan
+              </router-link>
+            </li>
+
+            <div class="divider my-2"></div>
+
+            <li>
+              <button
+                  @click="logout"
+                  class="flex items-center gap-3 p-2 hover:bg-error/10 hover:text-error rounded-lg transition-colors w-full text-left"
+              >
+                <i
+                    class="fas fa-sign-out-alt text-base-content/70 text-sm w-4"
+                ></i>
+                Log Out
+              </button>
+            </li>
+          </ul>
+        </div>
+
+
         <button
             class="btn btn-sm sm:btn-md btn-ghost text-base-content bg-base-200/70 hover:bg-base-300 border-none rounded-md transition-all duration-200 relative z-50"
             @click="toggleTheme"
