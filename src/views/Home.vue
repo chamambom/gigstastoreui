@@ -161,18 +161,13 @@ const goToPage = (page: number) => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+  <div class="min-h-screen">
 
     <!-- Modern Hero Section -->
     <div
         v-if="!isLoading && sellerGroups.length > 0"
-        class="relative overflow-hidden bg-gradient-to-br from-primary/5 via-orange-50/50 to-gray-50 border-b border-gray-200"
+        class="relative overflow-hidden border-b border-gray-200 bg-base-100 rounded-md"
     >
-      <!-- Decorative background elements -->
-      <div class="absolute inset-0 overflow-hidden pointer-events-none">
-        <div class="absolute -top-24 -right-24 w-96 h-96 bg-orange-400/5 rounded-full blur-3xl"></div>
-        <div class="absolute -bottom-24 -left-24 w-96 h-96 bg-primary/5 rounded-full blur-3xl"></div>
-      </div>
 
       <div class="relative max-w-7xl mx-auto px-6 py-10">
         <div class="flex flex-col md:flex-row items-center justify-between gap-6">
