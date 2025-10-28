@@ -166,7 +166,7 @@ const goToPage = (page: number) => {
     <!-- Modern Hero Section -->
     <div
         v-if="!isLoading && sellerGroups.length > 0"
-        class="relative overflow-hidden border-b border-gray-200 bg-base-100 rounded-md"
+        class="relative overflow-hidden border-b border-gray-200 bg-base-100 rounded-2xl"
     >
 
       <div class="relative max-w-7xl mx-auto px-6 py-10">
@@ -229,7 +229,7 @@ const goToPage = (page: number) => {
           <!-- CTA Button -->
           <router-link
               to="/seller/products/create"
-              class="group relative px-6 py-3 bg-gradient-to-r from-orange-400 to-orange-500 text-white font-semibold rounded-xl shadow-lg shadow-orange-400/25 hover:shadow-xl hover:shadow-orange-400/40 transition-all duration-300 hover:-translate-y-0.5 flex items-center gap-2"
+              class="group relative px-6 py-3 bg-orange-400/70 text-white font-semibold rounded-xl shadow-lg shadow-orange-400/10 hover:shadow-xl hover:shadow-orange-400/40 transition-all duration-300 hover:-translate-y-0.5 flex items-center gap-2"
           >
             <i class="fas fa-store text-sm"></i>
             <span>Create Virtual Shop</span>
@@ -276,7 +276,7 @@ const goToPage = (page: number) => {
     </div>
 
     <!-- Main Content Layout -->
-    <div v-else-if="sellerGroups.length > 0" class="max-w-7xl mx-auto px-4 py-6">
+    <div v-else-if="sellerGroups.length > 0" class="max-w-8xl mx-auto px-4 py-6">
       <div class="flex gap-6">
 
         <!-- LEFT SIDEBAR: Modern Filters -->

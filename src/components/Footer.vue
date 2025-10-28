@@ -2,7 +2,7 @@
 
   <!-- Modern Minimal Footer -->
   <footer
-      class="w-full mx-auto text-base-content mt-12 bg-base-300 dark:bg-base-200 my-4 rounded-tl-md rounded-tr-md text-sm">
+      class="max-w-8xl mx-auto text-base-content mt-12 bg-base-300 dark:bg-base-200 my-4 rounded-tl-md rounded-tr-md text-sm">
     <!-- Middle Section - Links Grid -->
     <div
         class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 py-12 dark:border-gray-700 bg-base-100 px-6 rounded-md">

@@ -23,7 +23,7 @@
           </div>
           <router-link to="/" class="flex items-center">
             <div class="font-semibold text-xl sm:text-2xl md:text-3xl tracking-tight">
-              <span class="text-primary">GigSta</span><span class="text-orange-400">Store</span>
+              <span class="text-primary/70">GigSta</span><span class="text-orange-400">Store</span>
             </div>
           </router-link>
         </div>
@@ -83,7 +83,7 @@
 
           <router-link
               to="/signup"
-              class="btn btn-sm sm:btn-md bg-primary text-white font-semibold rounded-md border-none hover:bg-purple-900 font-medium transition-all duration-200 relative z-50"
+              class="btn btn-sm sm:btn-md bg-primary/70 text-white font-semibold rounded-md border-none hover:bg-purple-900 font-medium transition-all duration-200 relative z-50"
           >
             Sign up to Start Selling
           </router-link>
