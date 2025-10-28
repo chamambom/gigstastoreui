@@ -34,7 +34,7 @@
 
         <!-- Fixed width container for conditional links -->
         <div class="hidden xl:flex items-center space-x-2">
-          <router-link v-if="isLoggedIn" class="btn btn-ghost btn-sm sm:btn-md rounded-btn flex-shrink-0" to="/seller/products">
+          <router-link v-if="isProvider" class="btn btn-ghost btn-sm sm:btn-md rounded-btn flex-shrink-0" to="/seller/products">
             <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
@@ -51,12 +51,11 @@
         </div>
       </div>
 
-<!--      <div v-if="!isLoggedIn || (isSeeker && !isProvisional)" class="navbar-center absolute left-1/2 -translate-x-1/2 hidden md:flex max-w-xl px-4">-->
+<!--      <div v-if="!isLoggedIn || isSeeker" class="navbar-center absolute left-1/2 -translate-x-1/2 hidden md:flex max-w-xl px-4">-->
 <!--        <div class="w-full">-->
 <!--          <Search/>-->
 <!--        </div>-->
 <!--      </div>-->
-
 
 
       <div class="navbar-end flex items-center space-x-2 sm:space-x-3 flex-shrink-0">

@@ -465,6 +465,6 @@ const {isLoggedIn, isProvider, isSeeker, hasBasicProfile, currentUser} = useAuth
 
 // Navigation
 const proceedAsProvider = () => {
-  router.push('/seller/products/create')
+  router.push({ name: 'provider-onboarding-details' });
 }
 </script>
