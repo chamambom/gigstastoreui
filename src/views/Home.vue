@@ -229,7 +229,7 @@ const goToPage = (page: number) => {
           <!-- CTA Button -->
           <router-link
               to="/seller/products/create"
-              class="group relative px-6 py-3 bg-orange-400/70 text-white font-semibold rounded-xl shadow-lg shadow-orange-400/10 hover:shadow-xl hover:shadow-orange-400/40 transition-all duration-300 hover:-translate-y-0.5 flex items-center gap-2"
+              class="group relative px-6 py-3 bg-orange-400/90 text-white font-semibold rounded-xl shadow-lg shadow-orange-400/10 hover:shadow-xl hover:shadow-orange-400/40 transition-all duration-300 hover:-translate-y-0.5 flex items-center gap-2"
           >
             <i class="fas fa-store text-sm"></i>
             <span>Create Virtual Shop</span>

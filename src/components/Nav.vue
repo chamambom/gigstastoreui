@@ -2,9 +2,9 @@
   <section
       class="navbar min-h-20 px-6 sm:px-25 text-base-content relative z-50 bg-base-100 border-b border-base-300"
   >
-    <div class="relative z-10 flex w-full items-center max-w-screen-2xl mx-auto">
+    <div class="relative z-10 flex w-full items-center justify-between max-w-screen-2xl mx-auto">
 
-      <div class="navbar-start flex items-center space-x-2 sm:space-x-3 flex-1 min-w-0">
+      <div class="navbar-start flex items-center space-x-2 sm:space-x-3 flex-shrink-0">
         <div class="flex-none lg:hidden">
           <label for="left-sidebar-drawer" class="btn btn-square btn-ghost hover:bg-base-200">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -23,7 +23,7 @@
           </div>
           <router-link to="/" class="flex items-center">
             <div class="font-semibold text-xl sm:text-2xl md:text-3xl tracking-tight">
-              <span class="text-primary/70">GigSta</span><span class="text-orange-400">Store</span>
+              <span class="text-primary/90">GigSta</span><span class="text-orange-400">Store</span>
             </div>
           </router-link>
         </div>
@@ -32,27 +32,31 @@
             class="divider divider-horizontal before:bg-base-300 after:bg-base-300 mx-2 sm:mx-3 opacity-50 flex-shrink-0 hidden sm:block">
         </div>
 
-        <router-link v-if="isLoggedIn" class="btn btn-ghost btn-sm rounded-btn hidden xl:flex" to="/seller/products">
-          <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
-          </svg>
-          My Products
-        </router-link>
+        <!-- Fixed width container for conditional links -->
+        <div class="hidden xl:flex items-center space-x-2">
+          <router-link v-if="isLoggedIn" class="btn btn-ghost btn-sm sm:btn-md rounded-btn flex-shrink-0" to="/seller/products">
+            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+            </svg>
+            My Products
+          </router-link>
 
-        <router-link v-if="canAccessProviderDashboard"
-                     to="/provider-dashboard"
-                     class="btn btn-ghost btn-sm sm:btn-md rounded-btn font-semibold hover:bg-base-200 transition-all duration-200 relative z-30 flex-shrink-0 hidden xl:flex">
-            <i class="fas fa-tachometer-alt text-base-content/70 text-sm w-4"></i>
-            Seller Dashboard
-        </router-link>
-      </div>
-
-      <div class="navbar-center hidden md:flex flex-1 max-w-xl px-4">
-        <div class="w-full">
-          <Search/>
+          <router-link v-if="isLoggedIn && !isProvisional"
+                       :to="canAccessProviderDashboard ? '/provider-dashboard' : '/seeker-dashboard'"
+                       class="btn btn-ghost btn-sm sm:btn-md rounded-btn font-semibold hover:bg-base-200 transition-all duration-200 relative z-30 flex-shrink-0">
+              <i class="fas fa-tachometer-alt text-base-content/70 text-sm w-4"></i>
+              {{ canAccessProviderDashboard ? 'Seller Dashboard' : 'Dashboard' }}
+          </router-link>
         </div>
       </div>
+
+<!--      <div v-if="!isLoggedIn || (isSeeker && !isProvisional)" class="navbar-center absolute left-1/2 -translate-x-1/2 hidden md:flex max-w-xl px-4">-->
+<!--        <div class="w-full">-->
+<!--          <Search/>-->
+<!--        </div>-->
+<!--      </div>-->
+
 
 
       <div class="navbar-end flex items-center space-x-2 sm:space-x-3 flex-shrink-0">
@@ -83,7 +87,7 @@
 
           <router-link
               to="/signup"
-              class="btn btn-sm sm:btn-md bg-primary/70 text-white font-semibold rounded-md border-none hover:bg-purple-900 font-medium transition-all duration-200 relative z-50"
+              class="btn btn-sm sm:btn-md bg-primary/90 text-white font-semibold rounded-md border-none hover:bg-purple-900 font-medium transition-all duration-200 relative z-50"
           >
             Sign up to Start Selling
           </router-link>
@@ -124,18 +128,19 @@
               </div>
             </li>
 
-            <li v-if="!canAccessProviderDashboard && !isProvisional">
-                <router-link to="/seeker-dashboard"
-                            class="flex items-center gap-3 p-2 hover:bg-purple-800/10 hover:text-purple-800 rounded-lg transition-colors">
+            <li v-if="!isProvisional">
+                <router-link
+                    :to="canAccessProviderDashboard ? '/provider-dashboard' : '/seeker-dashboard'"
+                    class="flex items-center gap-3 p-2 hover:bg-purple-800/10 hover:text-purple-800 rounded-lg transition-colors">
                     <i class="fas fa-tachometer-alt text-base-content/70 text-sm w-4"></i>
-                    Dashboard
+                    {{ canAccessProviderDashboard ? 'Seller Dashboard' : 'Dashboard' }}
                 </router-link>
             </li>
 
             <li v-show="!(isProvider && (isProviderApproved || isProviderPending))">
                 <router-link to="/bookings"
                            class="flex items-center gap-3 p-2 hover:bg-base-200/70 rounded-lg transition-colors">
-                    <i class="fas fa-calendar-alt text-base-content/70 text-sm w-4"></i> Bookings
+                    <i class="fas fa-calendar-alt text-base-content/70 text-sm w-4"></i> Orders
                 </router-link>
             </li>
             <li v-show="!(isProvider && (isProviderApproved || isProviderPending))">

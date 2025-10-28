@@ -53,7 +53,8 @@
             Discover African Treasures
           </h1>
           <p class="text-gray-600 text-lg max-w-2xl mx-auto mb-6">
-            Shop authentic African fashion, beauty, food, art, and more from small businesses across Australia & New Zealand
+            Shop authentic African fashion, beauty, food, art, and more from small businesses across Australia & New
+            Zealand
           </p>
           <div class="flex justify-center gap-3">
             <button class="btn bg-orange-400 text-white border-none hover:bg-orange-500 rounded-xl px-6">
@@ -72,38 +73,52 @@
     <!-- Main Search Section - The Star of the Show -->
     <section class="mb-8">
       <div class="bg-white rounded-2xl shadow-lg border border-gray-200 p-8">
-        <div class="text-center mb-6">
-          <div class="inline-flex items-center justify-center w-14 h-14 bg-orange-50 rounded-2xl mb-4">
-            <i class="fas fa-search text-orange-400 text-2xl"></i>
+        <div class="mb-8">
+          <!-- Header Section -->
+          <div class="text-center mb-8">
+            <h2 class="text-3xl font-bold text-gray-900 mb-3">Find What You're Looking For</h2>
+            <p class="text-gray-600 text-lg">Search by product name, category, seller, or location</p>
           </div>
-          <h2 class="text-2xl font-bold text-gray-900 mb-2">Find What You're Looking For</h2>
-          <p class="text-gray-600">Search by product name, category, seller, or location</p>
-        </div>
 
-        <!-- Your existing SmartSearch component -->
-        <SmartSearch :isLoggedIn="isLoggedIn" :user="currentUser"/>
+          <!-- Expanded Search Bar with Integrated Icon -->
+          <div class="max-w-4xl mx-auto">
+            <div class="relative">
+              <div class="absolute left-5 top-1/2 -translate-y-1/2 z-10 pointer-events-none">
+                <i class="fas fa-search text-gray-400 text-xl"></i>
+              </div>
+              <div class="pl-12">
+                <Search/>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <!-- Popular Searches -->
         <div class="mt-6">
           <p class="text-sm text-gray-600 mb-3 text-center">Popular searches:</p>
           <div class="flex flex-wrap justify-center gap-2">
-            <button class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm font-medium text-gray-700 transition-colors">
+            <button
+                class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm font-medium text-gray-700 transition-colors">
               <i class="fas fa-tshirt text-orange-400 text-xs mr-1.5"></i>
               African Fashion
             </button>
-            <button class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm font-medium text-gray-700 transition-colors">
+            <button
+                class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm font-medium text-gray-700 transition-colors">
               <i class="fas fa-pump-soap text-orange-400 text-xs mr-1.5"></i>
               Hair Products
             </button>
-            <button class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm font-medium text-gray-700 transition-colors">
+            <button
+                class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm font-medium text-gray-700 transition-colors">
               <i class="fas fa-leaf text-orange-400 text-xs mr-1.5"></i>
               Natural Skincare
             </button>
-            <button class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm font-medium text-gray-700 transition-colors">
+            <button
+                class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm font-medium text-gray-700 transition-colors">
               <i class="fas fa-drumstick-bite text-orange-400 text-xs mr-1.5"></i>
               African Spices
             </button>
-            <button class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm font-medium text-gray-700 transition-colors">
+            <button
+                class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm font-medium text-gray-700 transition-colors">
               <i class="fas fa-palette text-orange-400 text-xs mr-1.5"></i>
               Art & Crafts
             </button>
@@ -128,9 +143,11 @@
 
       <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-4">
         <!-- Fashion & Accessories -->
-        <div class="bg-white rounded-2xl p-6 border border-gray-200 hover:shadow-md hover:border-orange-200 transition-all cursor-pointer group">
+        <div
+            class="bg-white rounded-2xl p-6 border border-gray-200 hover:shadow-md hover:border-orange-200 transition-all cursor-pointer group">
           <div class="flex flex-col items-center text-center">
-            <div class="w-16 h-16 bg-orange-50 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-orange-100 transition-colors">
+            <div
+                class="w-16 h-16 bg-orange-50 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-orange-100 transition-colors">
               <i class="fas fa-tshirt text-orange-400 text-2xl"></i>
             </div>
             <h3 class="font-bold text-gray-900 mb-1">Fashion</h3>
@@ -139,9 +156,11 @@
         </div>
 
         <!-- Beauty & Hair -->
-        <div class="bg-white rounded-2xl p-6 border border-gray-200 hover:shadow-md hover:border-orange-200 transition-all cursor-pointer group">
+        <div
+            class="bg-white rounded-2xl p-6 border border-gray-200 hover:shadow-md hover:border-orange-200 transition-all cursor-pointer group">
           <div class="flex flex-col items-center text-center">
-            <div class="w-16 h-16 bg-orange-50 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-orange-100 transition-colors">
+            <div
+                class="w-16 h-16 bg-orange-50 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-orange-100 transition-colors">
               <i class="fas fa-pump-soap text-orange-400 text-2xl"></i>
             </div>
             <h3 class="font-bold text-gray-900 mb-1">Beauty</h3>
@@ -150,9 +169,11 @@
         </div>
 
         <!-- Food & Spices -->
-        <div class="bg-white rounded-2xl p-6 border border-gray-200 hover:shadow-md hover:border-orange-200 transition-all cursor-pointer group">
+        <div
+            class="bg-white rounded-2xl p-6 border border-gray-200 hover:shadow-md hover:border-orange-200 transition-all cursor-pointer group">
           <div class="flex flex-col items-center text-center">
-            <div class="w-16 h-16 bg-orange-50 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-orange-100 transition-colors">
+            <div
+                class="w-16 h-16 bg-orange-50 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-orange-100 transition-colors">
               <i class="fas fa-drumstick-bite text-orange-400 text-2xl"></i>
             </div>
             <h3 class="font-bold text-gray-900 mb-1">Food</h3>
@@ -161,9 +182,11 @@
         </div>
 
         <!-- Art & Crafts -->
-        <div class="bg-white rounded-2xl p-6 border border-gray-200 hover:shadow-md hover:border-orange-200 transition-all cursor-pointer group">
+        <div
+            class="bg-white rounded-2xl p-6 border border-gray-200 hover:shadow-md hover:border-orange-200 transition-all cursor-pointer group">
           <div class="flex flex-col items-center text-center">
-            <div class="w-16 h-16 bg-orange-50 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-orange-100 transition-colors">
+            <div
+                class="w-16 h-16 bg-orange-50 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-orange-100 transition-colors">
               <i class="fas fa-palette text-orange-400 text-2xl"></i>
             </div>
             <h3 class="font-bold text-gray-900 mb-1">Art</h3>
@@ -172,9 +195,11 @@
         </div>
 
         <!-- Home Decor -->
-        <div class="bg-white rounded-2xl p-6 border border-gray-200 hover:shadow-md hover:border-orange-200 transition-all cursor-pointer group">
+        <div
+            class="bg-white rounded-2xl p-6 border border-gray-200 hover:shadow-md hover:border-orange-200 transition-all cursor-pointer group">
           <div class="flex flex-col items-center text-center">
-            <div class="w-16 h-16 bg-orange-50 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-orange-100 transition-colors">
+            <div
+                class="w-16 h-16 bg-orange-50 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-orange-100 transition-colors">
               <i class="fas fa-couch text-orange-400 text-2xl"></i>
             </div>
             <h3 class="font-bold text-gray-900 mb-1">Home</h3>
@@ -183,9 +208,11 @@
         </div>
 
         <!-- Books & Music -->
-        <div class="bg-white rounded-2xl p-6 border border-gray-200 hover:shadow-md hover:border-orange-200 transition-all cursor-pointer group">
+        <div
+            class="bg-white rounded-2xl p-6 border border-gray-200 hover:shadow-md hover:border-orange-200 transition-all cursor-pointer group">
           <div class="flex flex-col items-center text-center">
-            <div class="w-16 h-16 bg-orange-50 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-orange-100 transition-colors">
+            <div
+                class="w-16 h-16 bg-orange-50 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-orange-100 transition-colors">
               <i class="fas fa-book text-orange-400 text-2xl"></i>
             </div>
             <h3 class="font-bold text-gray-900 mb-1">Books</h3>
@@ -194,9 +221,11 @@
         </div>
 
         <!-- Gifts -->
-        <div class="bg-white rounded-2xl p-6 border border-gray-200 hover:shadow-md hover:border-orange-200 transition-all cursor-pointer group">
+        <div
+            class="bg-white rounded-2xl p-6 border border-gray-200 hover:shadow-md hover:border-orange-200 transition-all cursor-pointer group">
           <div class="flex flex-col items-center text-center">
-            <div class="w-16 h-16 bg-orange-50 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-orange-100 transition-colors">
+            <div
+                class="w-16 h-16 bg-orange-50 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-orange-100 transition-colors">
               <i class="fas fa-gift text-orange-400 text-2xl"></i>
             </div>
             <h3 class="font-bold text-gray-900 mb-1">Gifts</h3>
@@ -205,9 +234,11 @@
         </div>
 
         <!-- Natural Wellness -->
-        <div class="bg-white rounded-2xl p-6 border border-gray-200 hover:shadow-md hover:border-orange-200 transition-all cursor-pointer group">
+        <div
+            class="bg-white rounded-2xl p-6 border border-gray-200 hover:shadow-md hover:border-orange-200 transition-all cursor-pointer group">
           <div class="flex flex-col items-center text-center">
-            <div class="w-16 h-16 bg-orange-50 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-orange-100 transition-colors">
+            <div
+                class="w-16 h-16 bg-orange-50 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-orange-100 transition-colors">
               <i class="fas fa-leaf text-orange-400 text-2xl"></i>
             </div>
             <h3 class="font-bold text-gray-900 mb-1">Wellness</h3>
@@ -239,7 +270,8 @@
         <!-- Placeholder for featured sellers -->
         <div class="bg-white rounded-2xl p-6 border border-gray-200 hover:shadow-md transition-all">
           <div class="flex items-center gap-4 mb-4">
-            <div class="w-14 h-14 rounded-2xl bg-orange-400 flex items-center justify-center text-white font-bold text-xl">
+            <div
+                class="w-14 h-14 rounded-2xl bg-orange-400 flex items-center justify-center text-white font-bold text-xl">
               A
             </div>
             <div class="flex-1">
@@ -295,7 +327,8 @@
 
         <div class="bg-white rounded-2xl p-6 border border-gray-200 hover:shadow-md transition-all">
           <div class="flex items-center gap-4 mb-4">
-            <div class="w-14 h-14 rounded-2xl bg-orange-400 flex items-center justify-center text-white font-bold text-xl">
+            <div
+                class="w-14 h-14 rounded-2xl bg-orange-400 flex items-center justify-center text-white font-bold text-xl">
               C
             </div>
             <div class="flex-1">
@@ -372,7 +405,8 @@
                 Start Selling Your Products
               </h2>
               <p class="text-gray-700 mb-6 text-lg max-w-2xl">
-                Join our community of African entrepreneurs. Create your virtual shop, reach thousands of customers, and grow your business online.
+                Join our community of African entrepreneurs. Create your virtual shop, reach thousands of customers, and
+                grow your business online.
               </p>
 
               <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
@@ -418,15 +452,16 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import { useAuthStore } from '@/stores/authStore'
-import { useAuthFlags } from '@/composables/useAuthFlags'
+import {computed, onMounted} from 'vue'
+import {useRouter} from 'vue-router'
+import {useAuthStore} from '@/stores/authStore'
+import {useAuthFlags} from '@/composables/useAuthFlags'
+import Search from '../components/Search.vue'
 
 // Composables
 const router = useRouter()
 const authStore = useAuthStore()
-const { isLoggedIn, isProvider, isSeeker, hasBasicProfile, currentUser } = useAuthFlags()
+const {isLoggedIn, isProvider, isSeeker, hasBasicProfile, currentUser} = useAuthFlags()
 
 // Navigation
 const proceedAsProvider = () => {

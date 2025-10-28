@@ -22,19 +22,19 @@ function navigate(productId: string) {
 </script>
 
 <template>
-  <div class="dropdown dropdown-end">
+  <div class="dropdown dropdown-end w-full">
     <div class="form-control">
       <input
         v-model="input"
         type="text"
         placeholder="Search..."
-        class="input input-ghost"
+        class="input input-ghost w-full border border-gray-200 focus:border-orange-400 focus:outline-none rounded-xl"
         :disabled="!productStore.loaded"
       >
     </div>
     <ul
       v-if="searchResults.length > 0"
-      class="shadow menu dropdown-content bg-base-100 rounded-box w-64 text-base-content overflow-y-scroll"
+      class="shadow menu dropdown-content bg-base-100 rounded-box w-full text-base-content overflow-y-scroll border border-gray-200 mt-2"
       style="max-height: 50vh;"
     >
       <li v-for="product in searchResults" :key="product._id">
