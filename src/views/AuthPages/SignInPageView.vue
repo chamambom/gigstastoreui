@@ -27,36 +27,36 @@
           </div>
 
           <!-- Social Login Section -->
-<!--          <div class="space-y-3">-->
-<!--            <button-->
-<!--                @click="googleLogin"-->
-<!--                class="btn btn-sm sm:btn-md border-gray-300 rounded-full w-full gap-2 sm:gap-3 group hover:bg-red-50 hover:border-red-200 dark:hover:bg-red-950/20 transition-all duration-200 min-h-10 sm:min-h-12"-->
-<!--            >-->
-<!--              <svg class="w-4 h-4 sm:w-5 sm:h-5 group-hover:scale-110 transition-transform flex-shrink-0" viewBox="0 0 24 24">-->
-<!--                <path fill="#4285f4"-->
-<!--                      d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>-->
-<!--                <path fill="#34a853"-->
-<!--                      d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>-->
-<!--                <path fill="#fbbc05"-->
-<!--                      d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>-->
-<!--                <path fill="#ea4335"-->
-<!--                      d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>-->
-<!--              </svg>-->
-<!--              <span class="font-medium text-sm sm:text-base-content truncate">Continue with Google</span>-->
-<!--            </button>-->
+          <!--          <div class="space-y-3">-->
+          <!--            <button-->
+          <!--                @click="googleLogin"-->
+          <!--                class="btn btn-sm sm:btn-md border-gray-300 rounded-full w-full gap-2 sm:gap-3 group hover:bg-red-50 hover:border-red-200 dark:hover:bg-red-950/20 transition-all duration-200 min-h-10 sm:min-h-12"-->
+          <!--            >-->
+          <!--              <svg class="w-4 h-4 sm:w-5 sm:h-5 group-hover:scale-110 transition-transform flex-shrink-0" viewBox="0 0 24 24">-->
+          <!--                <path fill="#4285f4"-->
+          <!--                      d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>-->
+          <!--                <path fill="#34a853"-->
+          <!--                      d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>-->
+          <!--                <path fill="#fbbc05"-->
+          <!--                      d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>-->
+          <!--                <path fill="#ea4335"-->
+          <!--                      d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>-->
+          <!--              </svg>-->
+          <!--              <span class="font-medium text-sm sm:text-base-content truncate">Continue with Google</span>-->
+          <!--            </button>-->
 
-<!--            <button-->
-<!--                @click="facebookLogin"-->
-<!--                class="btn btn-sm sm:btn-md border-gray-300 rounded-full w-full gap-2 sm:gap-3 group hover:bg-blue-50 hover:border-blue-200 dark:hover:bg-blue-950/20 transition-all duration-200 min-h-10 sm:min-h-12"-->
-<!--            >-->
-<!--              <svg class="w-4 h-4 sm:w-5 sm:h-5 text-[#1877f2] group-hover:scale-110 transition-transform flex-shrink-0" viewBox="0 0 24 24"-->
-<!--                   fill="currentColor">-->
-<!--                <path-->
-<!--                    d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>-->
-<!--              </svg>-->
-<!--              <span class="font-medium text-sm sm:text-base-content truncate">Continue with Facebook</span>-->
-<!--            </button>-->
-<!--          </div>-->
+          <!--            <button-->
+          <!--                @click="facebookLogin"-->
+          <!--                class="btn btn-sm sm:btn-md border-gray-300 rounded-full w-full gap-2 sm:gap-3 group hover:bg-blue-50 hover:border-blue-200 dark:hover:bg-blue-950/20 transition-all duration-200 min-h-10 sm:min-h-12"-->
+          <!--            >-->
+          <!--              <svg class="w-4 h-4 sm:w-5 sm:h-5 text-[#1877f2] group-hover:scale-110 transition-transform flex-shrink-0" viewBox="0 0 24 24"-->
+          <!--                   fill="currentColor">-->
+          <!--                <path-->
+          <!--                    d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>-->
+          <!--              </svg>-->
+          <!--              <span class="font-medium text-sm sm:text-base-content truncate">Continue with Facebook</span>-->
+          <!--            </button>-->
+          <!--          </div>-->
 
           <!-- Divider -->
           <div class="divider text-xs font-medium my-3">OR</div>
@@ -153,11 +153,19 @@
             <button
                 type="submit"
                 :disabled="v$.form.$invalid || loadingLogin"
-                class="btn btn-sm sm:btn-md bg-purple-700 hover:bg-purple-600 rounded-full w-full gap-2 font-medium shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-60 min-h-10 sm:min-h-12"
+                class="btn btn-sm sm:btn-md
+                       bg-primary/90 text-white
+                       hover:bg-orange-400
+                       disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed
+                       rounded-full w-full gap-2 font-medium
+                       shadow-md hover:shadow-lg
+                       transition-all duration-200
+                       min-h-10 sm:min-h-12"
             >
               <span v-if="loadingLogin" class="loading loading-spinner loading-sm"></span>
               <span v-else class="flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4 flex-shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"
+                     class="w-4 h-4 flex-shrink-0">
                   <path fill-rule="evenodd"
                         d="M2 8a.75.75 0 0 1 .75-.75h8.69L8.22 4.03a.75.75 0 0 1 1.06-1.06l4.5 4.5a.75.75 0 0 1 0 1.06l-4.5 4.5a.75.75 0 0 1-1.06-1.06l3.22-3.22H2.75A.75.75 0 0 1 2 8Z"
                         clip-rule="evenodd"/>
@@ -171,7 +179,8 @@
           <div class="text-center pt-2">
             <p class="text-sm text-base-content/70">
               Don't have an account?
-              <router-link to="/signup" class="link text-orange-400 font-medium hover:link-hover transition-colors active:scale-95">
+              <router-link to="/signup"
+                           class="link text-orange-400 font-medium hover:link-hover transition-colors active:scale-95">
                 Sign up
               </router-link>
             </p>
@@ -273,7 +282,8 @@
             >
               <span v-if="loadingForgotPassword" class="loading loading-spinner loading-sm"></span>
               <span v-else class="flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4 flex-shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"
+                     class="w-4 h-4 flex-shrink-0">
                   <path
                       d="M2.5 3A1.5 1.5 0 0 0 1 4.5v.793c.026.009.051.02.076.032L7.674 8.51c.206.1.446.1.652 0l6.598-3.185A.755.755 0 0 1 15 5.293V4.5A1.5 1.5 0 0 0 13.5 3h-11Z"/>
                   <path
@@ -290,17 +300,17 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, reactive, ref, watch, nextTick, computed } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import {onMounted, reactive, ref, watch, nextTick, computed} from 'vue';
+import {useRoute, useRouter} from 'vue-router';
 
 // 1. Pinia Imports
-import { useAuthStore } from '@/stores/authStore'; // 👈 Use the Pinia store
+import {useAuthStore} from '@/stores/authStore'; // 👈 Use the Pinia store
 //import { User } from '../types/User'; // 👈 Import the User type for safety
 
 // 2. Composable and Vuelidate Imports (unchanged)
-import { useAuthFlags } from '@/composables/useAuthFlags';
+import {useAuthFlags} from '@/composables/useAuthFlags';
 import useVuelidate from '@vuelidate/core';
-import { required, email, minLength, helpers } from '@vuelidate/validators';
+import {required, email, minLength, helpers} from '@vuelidate/validators';
 
 // 3. Initialize Stores and Router
 const authStore = useAuthStore(); // 👈 Pinia store instance
@@ -309,20 +319,21 @@ const route = useRoute();
 
 // 4. Use the Pinia-compatible composable
 const {
-    isLoggedIn, // This is a ComputedRef<boolean>
-    isProvider,
-    isSeeker,
-    currentUser: currentUserRef, // This is a ComputedRef<User | null>
+  isLoggedIn, // This is a ComputedRef<boolean>
+  isProvider,
+  isSeeker,
+  currentUser: currentUserRef, // This is a ComputedRef<User | null>
 } = useAuthFlags();
 
 // --- Login Form State (Typed) ---
 interface LoginForm {
-    email: string;
-    password: string;
+  email: string;
+  password: string;
 }
+
 const form = reactive<LoginForm>({
-    email: '',
-    password: '',
+  email: '',
+  password: '',
 });
 const loginError = ref<string>('');
 const loadingLogin = ref<boolean>(false);
@@ -336,225 +347,225 @@ const loadingForgotPassword = ref<boolean>(false);
 
 // --- Vuelidate Rules (Unchanged logic, Vuelidate handles types) ---
 const loginRules = computed(() => {
-    return {
-        form: {
-            email: {
-                required: helpers.withMessage('Email is required', required),
-                email: helpers.withMessage('Must be a valid email address', email),
-            },
-            password: {
-                required: helpers.withMessage('Password is required', required),
-                minLength: helpers.withMessage(({ $params }: any) => `Password must be at least ${$params.min} characters long`, minLength(8)),
-            },
-        },
-    };
+  return {
+    form: {
+      email: {
+        required: helpers.withMessage('Email is required', required),
+        email: helpers.withMessage('Must be a valid email address', email),
+      },
+      password: {
+        required: helpers.withMessage('Password is required', required),
+        minLength: helpers.withMessage(({$params}: any) => `Password must be at least ${$params.min} characters long`, minLength(8)),
+      },
+    },
+  };
 });
 
 const forgotPasswordRules = computed(() => {
-    return {
-        forgotPasswordEmail: {
-            required: helpers.withMessage('Email is required', required),
-            email: helpers.withMessage('Must be a valid email address', email),
-        },
-    };
+  return {
+    forgotPasswordEmail: {
+      required: helpers.withMessage('Email is required', required),
+      email: helpers.withMessage('Must be a valid email address', email),
+    },
+  };
 });
 
 // Initialize Vuelidate for both forms (Unchanged)
 const v$ = useVuelidate(
-    { ...loginRules.value, ...forgotPasswordRules.value },
-    { form, forgotPasswordEmail }
+    {...loginRules.value, ...forgotPasswordRules.value},
+    {form, forgotPasswordEmail}
 );
 
 
 // --- Watch for changes in isLoggedIn to handle post-login redirects ---
 watch(isLoggedIn, async (newVal) => {
-    if (newVal) {
-        console.log('Login successful. Handling redirection...');
-        await nextTick();
+  if (newVal) {
+    console.log('Login successful. Handling redirection...');
+    await nextTick();
 
-        const query = route.query;
-        // All redirection logic remains exactly the same as it relies on Vue Router and browser storage.
+    const query = route.query;
+    // All redirection logic remains exactly the same as it relies on Vue Router and browser storage.
 
-        // 1. Redirect to specific query route (e.g., service booking)
-        if (query.redirectName) {
-            const routeObj = {
-                name: String(query.redirectName), // Cast to String for type safety
-                query: {
-                    serviceId: query.serviceId,
-                    providerId: query.providerId,
-                }
-            };
-            await router.replace(routeObj);
-            return;
+    // 1. Redirect to specific query route (e.g., service booking)
+    if (query.redirectName) {
+      const routeObj = {
+        name: String(query.redirectName), // Cast to String for type safety
+        query: {
+          serviceId: query.serviceId,
+          providerId: query.providerId,
         }
-
-        // 2. Redirect via standard router query param
-        const redirectPath = query.redirect;
-        if (redirectPath && typeof redirectPath === 'string') {
-            await router.replace(redirectPath);
-            return;
-        }
-
-        // 3. Redirect via localStorage (complex route object)
-        const postLoginRedirect = localStorage.getItem('postLoginRedirect');
-        if (postLoginRedirect) {
-            try {
-                const storedRoute = JSON.parse(postLoginRedirect);
-                localStorage.removeItem('postLoginRedirect');
-                await router.replace({ name: storedRoute.name, params: storedRoute.params, query: storedRoute.query });
-                return;
-            } catch (e) {
-                console.error("Failed to parse postLoginRedirect from localStorage.", e);
-                localStorage.removeItem('postLoginRedirect');
-            }
-        }
-
-        // 4. Default redirect
-        await router.replace({ name: 'onboarding-choice' });
+      };
+      await router.replace(routeObj);
+      return;
     }
-}, { immediate: true });
+
+    // 2. Redirect via standard router query param
+    const redirectPath = query.redirect;
+    if (redirectPath && typeof redirectPath === 'string') {
+      await router.replace(redirectPath);
+      return;
+    }
+
+    // 3. Redirect via localStorage (complex route object)
+    const postLoginRedirect = localStorage.getItem('postLoginRedirect');
+    if (postLoginRedirect) {
+      try {
+        const storedRoute = JSON.parse(postLoginRedirect);
+        localStorage.removeItem('postLoginRedirect');
+        await router.replace({name: storedRoute.name, params: storedRoute.params, query: storedRoute.query});
+        return;
+      } catch (e) {
+        console.error("Failed to parse postLoginRedirect from localStorage.", e);
+        localStorage.removeItem('postLoginRedirect');
+      }
+    }
+
+    // 4. Default redirect
+    await router.replace({name: 'onboarding-choice'});
+  }
+}, {immediate: true});
 
 
 // --- onMounted hook to handle direct URL access when already authenticated ---
 onMounted(async () => {
-    // Access isLoggedIn from the composable (which gets its value from Pinia)
-    if (isLoggedIn.value) {
-        console.log('User already authenticated on mount of Login page. Redirecting based on role.');
+  // Access isLoggedIn from the composable (which gets its value from Pinia)
+  if (isLoggedIn.value) {
+    console.log('User already authenticated on mount of Login page. Redirecting based on role.');
 
-        // Access the reactive value of the Pinia store's user getter via the composable
-        const user = currentUserRef.value;
+    // Access the reactive value of the Pinia store's user getter via the composable
+    const user = currentUserRef.value;
 
-        if (user?.roles?.includes('provider')) {
-            await router.replace({ name: 'ProviderDashboard' });
-        } else {
-            await router.replace({ name: 'SeekerDashboard' });
-        }
+    if (user?.roles?.includes('provider')) {
+      await router.replace({name: 'ProviderDashboard'});
+    } else {
+      await router.replace({name: 'SeekerDashboard'});
     }
+  }
 
-    // Handle pre-filling email from query
-    if (route.query.email && typeof route.query.email === 'string') {
-        form.email = route.query.email; // Pre-fill email field
-    }
+  // Handle pre-filling email from query
+  if (route.query.email && typeof route.query.email === 'string') {
+    form.email = route.query.email; // Pre-fill email field
+  }
 });
 
 
 // --- Login Action ---
 const submitLogin = async () => {
-    const isFormValid = await v$.value.form.$validate();
+  const isFormValid = await v$.value.form.$validate();
 
-    if (!isFormValid) {
-        loginError.value = 'Please correct the errors in the form.';
-        return;
+  if (!isFormValid) {
+    loginError.value = 'Please correct the errors in the form.';
+    return;
+  }
+
+  loginError.value = '';
+  loadingLogin.value = true;
+
+  try {
+    const credentials: LoginForm = {
+      email: form.email,
+      password: form.password,
+    };
+
+    // 🎯 Pinia Change: Call the action directly on the store instance
+    await authStore.logIn(credentials);
+
+  } catch (error: any) { // Use 'any' to handle the custom error structure
+    console.error('Login failed:', error);
+
+    if (error.message === "OAUTH_NEEDS_PASSWORD_SETUP") {
+      loginError.value = 'Your account was created with a social login. Please set a new password.';
+      openForgotPasswordModal();
+    } else {
+      // For all other errors, display the message to the user
+      loginError.value = error.message;
     }
 
-    loginError.value = '';
-    loadingLogin.value = true;
-
-    try {
-        const credentials: LoginForm = {
-            email: form.email,
-            password: form.password,
-        };
-
-        // 🎯 Pinia Change: Call the action directly on the store instance
-        await authStore.logIn(credentials);
-
-    } catch (error: any) { // Use 'any' to handle the custom error structure
-        console.error('Login failed:', error);
-
-        if (error.message === "OAUTH_NEEDS_PASSWORD_SETUP") {
-            loginError.value = 'Your account was created with a social login. Please set a new password.';
-            openForgotPasswordModal();
-        } else {
-            // For all other errors, display the message to the user
-            loginError.value = error.message;
-        }
-
-    } finally {
-        loadingLogin.value = false;
-    }
+  } finally {
+    loadingLogin.value = false;
+  }
 };
 
 // --- Social Login Actions ---
 const googleLogin = async () => {
-    try {
-        const query = route.query;
-        if (Object.keys(query).length > 0) {
-            // Store the entire query object for post-OAuth redirection
-            localStorage.setItem('postGoogleOAuthRedirect', JSON.stringify(query));
-        }
-
-        // 🎯 Pinia Change: Call the action directly on the store instance
-        await authStore.googleLogin();
-
-    } catch (error) {
-        console.error('Google login initiation failed:', error);
-        loginError.value = 'Google login failed to start. Please try again.';
+  try {
+    const query = route.query;
+    if (Object.keys(query).length > 0) {
+      // Store the entire query object for post-OAuth redirection
+      localStorage.setItem('postGoogleOAuthRedirect', JSON.stringify(query));
     }
+
+    // 🎯 Pinia Change: Call the action directly on the store instance
+    await authStore.googleLogin();
+
+  } catch (error) {
+    console.error('Google login initiation failed:', error);
+    loginError.value = 'Google login failed to start. Please try again.';
+  }
 };
 
 const facebookLogin = async () => {
-    try {
-        const query = route.query;
-        if (Object.keys(query).length > 0) {
-            // Store the entire query object for post-OAuth redirection
-            localStorage.setItem('postFacebookOAuthRedirect', JSON.stringify(query));
-        }
-
-        // 🎯 Pinia Change: Call the action directly on the store instance
-        await authStore.facebookLogin();
-
-    } catch (error) {
-        console.error('Facebook login initiation failed:', error);
-        loginError.value = 'Facebook login failed to start. Please try again.';
+  try {
+    const query = route.query;
+    if (Object.keys(query).length > 0) {
+      // Store the entire query object for post-OAuth redirection
+      localStorage.setItem('postFacebookOAuthRedirect', JSON.stringify(query));
     }
+
+    // 🎯 Pinia Change: Call the action directly on the store instance
+    await authStore.facebookLogin();
+
+  } catch (error) {
+    console.error('Facebook login initiation failed:', error);
+    loginError.value = 'Facebook login failed to start. Please try again.';
+  }
 };
 
 // --- Forgot Password Methods ---
 const openForgotPasswordModal = () => {
-    // ... (logic remains the same)
-    showForgotPasswordModal.value = true;
-    forgotPasswordEmail.value = form.email;
-    forgotPasswordMessage.value = '';
-    forgotPasswordSuccess.value = false;
-    v$.value.forgotPasswordEmail.$reset();
+  // ... (logic remains the same)
+  showForgotPasswordModal.value = true;
+  forgotPasswordEmail.value = form.email;
+  forgotPasswordMessage.value = '';
+  forgotPasswordSuccess.value = false;
+  v$.value.forgotPasswordEmail.$reset();
 };
 
 const closeForgotPasswordModal = () => {
-    // ... (logic remains the same)
-    showForgotPasswordModal.value = false;
-    forgotPasswordEmail.value = '';
-    forgotPasswordMessage.value = '';
-    forgotPasswordSuccess.value = false;
-    loadingForgotPassword.value = false;
-    v$.value.forgotPasswordEmail.$reset();
+  // ... (logic remains the same)
+  showForgotPasswordModal.value = false;
+  forgotPasswordEmail.value = '';
+  forgotPasswordMessage.value = '';
+  forgotPasswordSuccess.value = false;
+  loadingForgotPassword.value = false;
+  v$.value.forgotPasswordEmail.$reset();
 };
 
 const requestPasswordReset = async () => {
-    const isFormValid = await v$.value.forgotPasswordEmail.$validate();
+  const isFormValid = await v$.value.forgotPasswordEmail.$validate();
 
-    if (!isFormValid) {
-        forgotPasswordMessage.value = 'Please enter a valid email address.';
-        forgotPasswordSuccess.value = false;
-        return;
-    }
-
-    forgotPasswordMessage.value = '';
+  if (!isFormValid) {
+    forgotPasswordMessage.value = 'Please enter a valid email address.';
     forgotPasswordSuccess.value = false;
-    loadingForgotPassword.value = true;
+    return;
+  }
 
-    try {
-        // 🎯 Pinia Change: Call the action directly on the store instance
-        await authStore.requestPasswordReset(forgotPasswordEmail.value);
+  forgotPasswordMessage.value = '';
+  forgotPasswordSuccess.value = false;
+  loadingForgotPassword.value = true;
 
-        forgotPasswordSuccess.value = true;
-        forgotPasswordMessage.value = 'If an account with that email exists, a password reset link has been sent.';
-    } catch (error: any) { // Use 'any' to handle the axios/custom error structure
-        forgotPasswordSuccess.value = false;
-        forgotPasswordMessage.value = error.response?.data?.detail || 'Failed to send password reset link. Please try again.';
-        console.error('Forgot password request failed:', error);
-    } finally {
-        loadingForgotPassword.value = false;
-    }
+  try {
+    // 🎯 Pinia Change: Call the action directly on the store instance
+    await authStore.requestPasswordReset(forgotPasswordEmail.value);
+
+    forgotPasswordSuccess.value = true;
+    forgotPasswordMessage.value = 'If an account with that email exists, a password reset link has been sent.';
+  } catch (error: any) { // Use 'any' to handle the axios/custom error structure
+    forgotPasswordSuccess.value = false;
+    forgotPasswordMessage.value = error.response?.data?.detail || 'Failed to send password reset link. Please try again.';
+    console.error('Forgot password request failed:', error);
+  } finally {
+    loadingForgotPassword.value = false;
+  }
 };
 </script>
