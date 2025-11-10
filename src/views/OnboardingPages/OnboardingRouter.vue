@@ -151,8 +151,8 @@
 <script setup lang="ts">
 import { onMounted, computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
-import { useAuthFlags } from '@/composables/useAuthFlags'
-import { useAuthStore } from '@/stores/authStore'
+import { useAuthFlags } from '@/composables/useAuthFlags.ts'
+import { useAuthStore } from '@/stores/authStore.ts'
 
 
 

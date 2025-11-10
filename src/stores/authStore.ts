@@ -25,8 +25,9 @@ export const useAuthStore = defineStore('auth', {
         isSeeker: (state): boolean => state.user?.roles?.includes('user') || false,
         hasBasicProfile: (state): boolean => state.user?.onboarding_status?.basic_complete || false,
         hasProviderOnboarding: (state): boolean => state.user?.onboarding_status?.provider_onboarding_complete || false,
-        hasBillingSetup: (state): boolean => state.user?.onboarding_status?.billing_setup_complete || false,
-        providerStatus: (state): string => state.user?.provider_status || 'not_applied',
+        isStripeActivateSubscriptionComplete: (state): boolean => state.user?.onboarding_status?.stripe_activate_subscription_complete || false,
+        isStripeActivateConnectComplete: (state): boolean => state.user?.onboarding_status?.stripe_activate_connect_complete || false,
+        isStripeProviderStatus: (state): string => state.user?.stripe_provider_status || 'not_started',
         onboardingStatus: (state): OnboardingStatus => state.user?.onboarding_status || {} as OnboardingStatus,
     },
 
@@ -141,27 +142,59 @@ export const useAuthStore = defineStore('auth', {
             }
         },
 
-        async initiateBillingSetup(): Promise<User> {
+        async activateStripeSubscription(): Promise<User> {
             const token = localStorage.getItem('token');
             if (!token) throw new Error('No authentication token found.');
             try {
-                const response = await axios.post('/api/v1/user/complete-billing-setup', {}, {
+                const response = await axios.post('/api/v1/user/onboarding/activate-stripe-subscription', {}, {
                     headers: {'Authorization': `Bearer ${token}`},
                 });
                 this.setUser(response.data);
                 return response.data;
             } catch (error: any) {
-                console.error('Billing setup failed:', error.response?.data || error.message);
+                console.error('Free Plan Activation setup failed:', error.response?.data || error.message);
                 throw error;
             }
         },
 
-        async setProviderPending(): Promise<void> {
-            const token = localStorage.getItem('token');
-            await axios.patch('/api/v1/user/set-provider-pending', {provider_status: 'pending'}, {
-                headers: {'Authorization': `Bearer ${token}`},
-            });
-        },
+        // async setProviderPending(): Promise<void> {
+        //     const token = localStorage.getItem('token');
+        //     await axios.patch('/api/v1/user/set-provider-pending', {provider_status: 'pending'}, {
+        //         headers: {'Authorization': `Bearer ${token}`},
+        //     });
+        // },
+
+        // This action replaces the old setProviderPending logic.
+    async setFinalProviderStatus(): Promise<void> {
+      try {
+        // The endpoint should signal to the backend that the user has completed
+        // the frontend flow and is ready to enter the verification queue.
+        // The payload sends the explicit status 'pending_requirements'
+        // which matches the next logical state after 'billing_setup_complete: true'.
+        const response = await axios.patch('/api/v1/user/set-provider-status', {
+          provider_status: 'pending_requirements',
+        });
+
+        // Assuming the backend returns the full updated user object or the new status in response.data
+        if (this.user) {
+          // It is safest to assume the backend returns the new status field, or the full user object.
+          // We will use the status sent in the payload as a fallback if the full user is not returned.
+          const newStatus = response.data?.provider_status || 'pending_requirements';
+          this.user.provider_status = newStatus;
+
+          // Optional: You might also want to update the onboarding_status if needed,
+          // although the frontend check already confirms billing_setup_complete is true.
+        }
+
+        // Optional: Log success
+        console.log('Provider status successfully transitioned to pending_requirements', response.data);
+
+      } catch (error) {
+        console.error('Failed to set final provider status:', error);
+        // The component will catch and display this error
+        throw error;
+      }
+    },
 
         async viewUser(): Promise<void> {
             const token = localStorage.getItem('token');

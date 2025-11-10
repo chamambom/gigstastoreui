@@ -119,7 +119,7 @@ const getStatusBadgeClass = (status: string) => {
                 <div class="flex items-center gap-3">
                   <div class="avatar">
                     <div class="mask mask-squircle w-12 h-12">
-                      <img :src="product.image" :alt="product.title" />
+                      <img :src="product.media[0].url" :alt="product.title" />
                     </div>
                   </div>
                   <div>

@@ -2,29 +2,26 @@
   <div class="container mx-auto p-4 md:p-8">
     <div class="card bg-base-100 shadow-xl rounded-box border border-base-200">
       <div class="card-body">
-        <!-- Header Section -->
         <div class="flex flex-col items-center text-center mb-6">
           <div class="avatar placeholder mb-4">
             <div class="bg-orange-400 text-white rounded-full w-16 h-16">
-              <span class="text-2xl">🚀</span>
-            </div>
+              <span class="text-2xl">📦</span> </div>
           </div>
-          <h2 class="text-3xl font-bold text-base-content mb-2">Become a GigSta Provider!</h2>
+          <h2 class="text-3xl font-bold text-base-content mb-2">Become a Seller!</h2>
           <p class="text-lg text-base-content/60 max-w-md">
-            Let's get your business set up to offer services and start earning.
+            Let's get your business set up to offer **products** and start earning.
           </p>
 
-          <!-- Progress Indicator -->
           <div class="steps steps-horizontal mt-6">
-            <div class="step step-primary">Provider Setup</div>
-            <div class="step">Business Details</div>
-            <div class="step">Service Creation</div>
+            <div class="step step-primary">1. Seller Setup</div>
+             <div class="step">2. Stripe Subscription</div>
+            <div class="step">3. Stripe Connect Payout Setup</div>
+            <div class="step">4. Awaiting Verification</div>
           </div>
         </div>
 
         <div class="divider"></div>
 
-        <!-- Main Form Section -->
         <div class="max-w-2xl mx-auto w-full">
           <div class="flex items-center mb-6">
             <div
@@ -32,13 +29,12 @@
               <span class="font-semibold">1</span>
             </div>
             <div>
-              <h3 class="text-xl font-semibold text-base-content">Provider Information</h3>
+              <h3 class="text-xl font-semibold text-base-content">Seller & Business Information</h3>
               <p class="text-base-content/70">Tell us about yourself and your business</p>
             </div>
           </div>
 
           <form @submit.prevent="handleSubmit" class="space-y-6">
-            <!-- Personal Information Section -->
             <div class="card bg-base-200/30 shadow-sm border border-base-300">
               <div class="card-body p-6">
                 <div class="flex items-center mb-4">
@@ -51,7 +47,6 @@
                 </div>
 
                 <div class="space-y-4">
-                  <!-- Full Name -->
                   <div class="form-control">
                     <label for="fullName" class="label">
                       <span class="label-text text-sm font-medium text-base-content">
@@ -75,7 +70,6 @@
                     </div>
                   </div>
 
-                  <!-- Phone Number -->
                   <div class="form-control">
                     <label class="label">
                       <span class="label-text text-sm font-medium text-base-content">
@@ -110,7 +104,6 @@
               </div>
             </div>
 
-            <!-- Business Information Section -->
             <div class="card bg-base-200/30 shadow-sm border border-base-300">
               <div class="card-body p-6">
                 <div class="flex items-center mb-4">
@@ -123,7 +116,6 @@
                 </div>
 
                 <div class="space-y-4">
-                  <!-- Trading Name -->
                   <div class="form-control">
                     <label for="tradingName" class="label">
                       <span class="label-text text-sm font-medium text-base-content">
@@ -147,7 +139,6 @@
                     </div>
                   </div>
 
-                  <!-- Address Section -->
                   <div class="form-control">
                     <label class="label">
                       <span class="label-text text-sm font-medium text-base-content">
@@ -180,7 +171,6 @@
                       </div>
                     </div>
 
-                    <!-- Address Suggestions Dropdown -->
                     <div v-if="addressSuggestions.length" class="relative mt-2">
                       <div
                           class="absolute w-full z-10 bg-base-100 border border-base-300 rounded-lg shadow-lg max-h-48 overflow-y-auto">
@@ -193,9 +183,12 @@
                           <div class="text-sm text-base-content">{{ suggestion?.formatted ?? '' }}</div>
                         </div>
                       </div>
+
+
+
                     </div>
 
-                    <div v-if="v$.providerDetails.address.$error" class="label">
+                    <div v-if="v$.providerDetails.address.latitude.$error" class="label">
                       <span class="label-text-alt text-error">
                         Please select a suggested address to set location.
                       </span>
@@ -205,7 +198,6 @@
               </div>
             </div>
 
-            <!-- Success Message or Tips -->
             <div class="alert alert-info bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                    class="stroke-current shrink-0 w-6 h-6 text-blue-600">
@@ -213,14 +205,13 @@
                       d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
               </svg>
               <div>
-                <h3 class="font-bold text-blue-700 dark:text-blue-300">Almost there!</h3>
+                <h3 class="font-bold text-blue-700 dark:text-blue-300">Next Step: Payouts!</h3>
                 <div class="text-sm text-blue-600 dark:text-blue-300">
-                  After completing this step, you'll be able to create your first service and start accepting bookings.
+                  After completing this step, you'll set up your Stripe account to receive payments before creating your first **product**.
                 </div>
               </div>
             </div>
 
-            <!-- Action Buttons -->
             <div class="card-actions justify-between pt-6">
               <button
                   type="button"
@@ -239,7 +230,7 @@
                   class="btn bg-orange-400 hover:bg-orange-500 border-orange-400 text-white shadow-lg"
                   :disabled="v$.$invalid"
               >
-                Complete Provider Setup
+                Continue to Stripe Subscription Activation
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24"
                      stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
@@ -261,7 +252,7 @@ import {debounce} from 'lodash-es'
 import useVuelidate from '@vuelidate/core'
 import {required, helpers} from '@vuelidate/validators'
 
-import {useAuthStore} from '@/stores/authStore'
+import {useAuthStore} from '@/stores/authStore.ts'
 
 interface AddressSuggestion {
   formatted?: string
@@ -273,6 +264,12 @@ interface AddressSuggestion {
   postcode?: string
   lat?: number
   lon?: number
+}
+
+// Ensure the interface for the backend response is correct
+interface InitiatePayoutsResponse {
+  message: string
+  redirect_url: string
 }
 
 const addressSuggestions = ref<AddressSuggestion[]>([])
@@ -301,7 +298,6 @@ const providerDetails = reactive({
 
 // Address search reactive variables
 const userAddressSearchInput = ref('')
-// const addressSuggestions = ref([])
 const countryCode = ref('NZ')
 const phoneCountryCode = ref('+64')
 
@@ -310,10 +306,18 @@ const currentUser = computed(() => authStore.currentUser)
 
 // Custom validator for NZ/AU phone numbers
 const isMobileNumberValid = (value: string, phoneCountryCode: string) => {
-  const nzRegex = /^2\d{7,8}$/
+  // FIX: Added string check to satisfy TS and logic
+  if (typeof value !== 'string') return false
+  // NZ: Starts with 2, 7-8 digits after 2 (02X) -> e.g., 211234567 or 2712345678
+  const nzRegex = /^(02|2)\d{7,9}$/ // Allows 02... or 2... for flexibility
+  // AU: Starts with 4, 8 digits after 4 (04XX) -> e.g., 412345678
   const auRegex = /^4\d{8}$/
+
+  // Strip leading 0 if it exists
+  const cleanedValue = value.startsWith('0') ? value.substring(1) : value;
+
   if (phoneCountryCode === '+64' && nzRegex.test(value)) return true
-  if (phoneCountryCode === '+61' && auRegex.test(value)) return true
+  if (phoneCountryCode === '+61' && auRegex.test(cleanedValue)) return true
   return false
 }
 
@@ -325,10 +329,11 @@ const rules = computed(() => ({
     phone_number: {
       required: helpers.withMessage('Phone number is required', required),
       isMobileNumberValid: helpers.withMessage(
-          'Please enter a valid mobile number for the selected country.',
+          'Please enter a valid mobile number for the selected country (e.g., 021 123 4567 for NZ, 0412 345 678 for AU).',
           (value: unknown) => {
-            // FIX: Type guard to ensure value is a string
+            // Type guard to ensure value is a string
             if (typeof value !== 'string') return false
+            // The isMobileNumberValid function will handle the actual validation
             return isMobileNumberValid(value, phoneCountryCode.value)
           }
       ),
@@ -340,24 +345,21 @@ const rules = computed(() => ({
             required
         ),
       },
-      longitude: {
-        required: helpers.withMessage(
-            'Please select a valid address from the suggestions',
-            required
-        ),
-      },
+      // longitude is implicitly required if latitude is
     },
   },
   userAddressSearchInput: {required: helpers.withMessage('Address is required', required)},
   countryCode: {required: helpers.withMessage('Country is required', required)},
 }))
 
+// NOTE: Use providerDetails.address.latitude.$error in template for address error
 const v$ = useVuelidate(rules, {providerDetails, userAddressSearchInput, countryCode})
 
-// Watch currentUser and populate providerDetails
+// Watch currentUser and populate providerDetails (Keeping the original logic for data hydration)
 watch(
     currentUser,
     (newUser) => {
+      // ... (Original logic for data hydration remains here)
       if (!newUser) return
 
       providerDetails.full_name = newUser.full_name || ''
@@ -375,19 +377,19 @@ watch(
         }
       } else providerDetails.phone_number = ''
 
-      // FIX: Properly handle optional address with type safety
+      // Properly handle optional address with type safety
       const addr = newUser.address
       if (addr) {
-        providerDetails.address.formatted = addr.formatted
-        providerDetails.address.street_number = addr.street_number
-        providerDetails.address.street = addr.street
-        providerDetails.address.locality = addr.locality
-        providerDetails.address.city = addr.city
-        providerDetails.address.region = addr.region
-        providerDetails.address.postcode = addr.postcode
-        providerDetails.address.latitude = addr.latitude
-        providerDetails.address.longitude = addr.longitude
-        userAddressSearchInput.value = addr.formatted
+        providerDetails.address.formatted = addr.formatted || ''
+        providerDetails.address.street_number = addr.street_number || ''
+        providerDetails.address.street = addr.street || ''
+        providerDetails.address.locality = addr.locality || ''
+        providerDetails.address.city = addr.city || ''
+        providerDetails.address.region = addr.region || ''
+        providerDetails.address.postcode = addr.postcode || ''
+        providerDetails.address.latitude = addr.latitude ?? null
+        providerDetails.address.longitude = addr.longitude ?? null
+        userAddressSearchInput.value = addr.formatted || ''
       } else {
         // Reset to empty values if no address exists
         providerDetails.address.formatted = ''
@@ -405,7 +407,8 @@ watch(
     {immediate: true}
 )
 
-// Address suggestions API
+
+// Address suggestions API (Keeping the original logic)
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
 const fetchAddressSuggestions = debounce(async () => {
   if (userAddressSearchInput.value.length < 4) {
@@ -424,7 +427,7 @@ const fetchAddressSuggestions = debounce(async () => {
   }
 }, 500)
 
-// Select address suggestion
+// Select address suggestion (Keeping the original logic)
 const selectAddressSuggestion = (suggestion: AddressSuggestion) => {
   userAddressSearchInput.value = suggestion.formatted || ''
   addressSuggestions.value = []
@@ -441,15 +444,17 @@ const selectAddressSuggestion = (suggestion: AddressSuggestion) => {
     longitude: suggestion.lon ?? null,
   })
 
+  // Manually touch the validation field to trigger update
   v$.value.providerDetails.address.latitude.$touch()
 }
 
-// Submit provider onboarding
+// Submit provider onboarding and initiate Stripe Connect Payouts
 const handleSubmit = async () => {
   const isFormValid = await v$.value.$validate()
   if (!isFormValid) return console.error('Validation Error: Please correct the errors.')
 
   try {
+    // 1. Complete the initial Seller Setup
     const fullPhoneNumber = `${phoneCountryCode.value}${providerDetails.phone_number}`
     await authStore.completeProviderOnboarding({
       full_name: providerDetails.full_name,
@@ -457,20 +462,24 @@ const handleSubmit = async () => {
       phone_number: fullPhoneNumber,
       address: {...providerDetails.address},
     })
-    router.push('/onboarding/billing-setup')
+
+    // 2. Redirect to Stripe Connect Setup (Step 2) - NOT Stripe Connect yet!
+    router.push('/activate-stripe-subscription')
+
   } catch (error: unknown) {
-    // FIX: Properly handle unknown error type
+    // Properly handle error types
     if (error instanceof Error) {
-      console.error('Provider setup (Step 1) failed:', error.message)
+      console.error('Seller setup (Step 1) failed:', error.message)
     } else if (axios.isAxiosError(error)) {
-      console.error('Provider setup (Step 1) failed:', error.response?.data?.detail || error.message)
+      console.error('Seller setup (Step 1) failed:', error.response?.data?.detail || error.message)
     } else {
-      console.error('Provider setup (Step 1) failed:', String(error))
+      console.error('Seller setup (Step 1) failed:', String(error))
     }
+    // Optionally show a user-facing error message here
   }
 }
 
-// Cancel and go back
+// Cancel and go back (Keeping the original logic)
 const goBackToSeekerDashboard = () => {
   router.push('/seeker-dashboard')
 }

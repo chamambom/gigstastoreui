@@ -1,10 +1,10 @@
 // src/composables/useAuthFlags.ts
 
-import { computed } from 'vue';
-import type { ComputedRef } from 'vue';
-import { storeToRefs } from 'pinia';
-import { useAuthStore } from '../stores/authStore'; // 👈 Import your new Pinia store
-import type { User, OnboardingStatus } from '../types/User';
+import {computed} from 'vue';
+import type {ComputedRef} from 'vue';
+import {storeToRefs} from 'pinia';
+import {useAuthStore} from '../stores/authStore'; // 👈 Import your new Pinia store
+import type {User, OnboardingStatus} from '../types/User';
 
 /**
  * Custom composable to derive comprehensive authentication and user status flags from the Pinia store.
@@ -24,7 +24,7 @@ export function useAuthFlags() {
         isSuper,
         isProvider,
         isSeeker,
-        providerStatus,
+        isStripeProviderStatus,
         isProvisional,
     } = storeToRefs(authStore);
 
@@ -45,15 +45,17 @@ export function useAuthFlags() {
 
     const hasBasicProfile = computed(() => onboarding.value?.basic_complete || false);
     const hasProviderOnboarding = computed(() => onboarding.value?.provider_onboarding_complete || false);
-    const hasBillingSetup = computed(() => onboarding.value?.billing_setup_complete || false);
+    const hasStripeSubscription = computed(() => onboarding.value?.stripe_activate_subscription_complete || false);
+    const hasStripeConnect = computed(() => onboarding.value?.stripe_activate_connect_complete || false);
 
 
-    // === Provider Status (admin approval) ===
 
-    // isProvider is extracted from storeToRefs (authStore getter), so it is already a ComputedRef<boolean>
-    const isProviderApproved = computed(() => isProvider.value && providerStatus.value === 'approved');
-    const isProviderPending = computed(() => isProvider.value && providerStatus.value === 'pending');
-    const isProviderRejected = computed(() => isProvider.value && providerStatus.value === 'rejected');
+    // === Provider Status (admin approval & connect readiness) ===
+
+    // The new primary flag for final readiness
+    const isProviderActive = computed(() => isProvider.value && isStripeProviderStatus.value === 'active');
+    const isProviderPendingConnectVerification = computed(() => isProvider.value && isStripeProviderStatus.value === 'connect_verification_pending');
+    const isProviderRejected = computed(() => isProvider.value && isStripeProviderStatus.value === 'rejected');
 
 
     // --- ADD NEW FLAG for unverified users ---
@@ -69,8 +71,8 @@ export function useAuthFlags() {
         isProvider.value &&
         hasBasicProfile.value &&
         hasProviderOnboarding.value &&
-        hasBillingSetup.value &&
-        providerStatus.value === 'approved'
+        hasStripeSubscription.value &&
+        isProviderActive.value
     );
 
 
@@ -93,15 +95,16 @@ export function useAuthFlags() {
     const isAwaitingProviderApproval = computed(() =>
         currentUser.value &&
         isAuthenticated.value &&
-        isProvider.value &&
-        (providerStatus.value === 'pending' || providerStatus.value === 'rejected')
+        isProvider.value
+        // // (providerStatus.value === 'pending' || providerStatus.value === 'rejected')
+        // (isProviderPendingAdmin.value || isProviderRejected.value || isProviderPendingConnectVerification.value)
     );
 
 
     // === Flags to help in route guards or conditionals ===
     const needsBasicProfile = computed(() => isAuthenticated.value && !hasBasicProfile.value);
     const needsProviderOnboarding = computed(() => isProvider.value && !hasProviderOnboarding.value);
-    const needsBillingSetup = computed(() => isProvider.value && !hasBillingSetup.value);
+    const needsBillingSetup = computed(() => isProvider.value && !hasStripeSubscription.value);
 
 
     return {
@@ -119,12 +122,11 @@ export function useAuthFlags() {
         // Onboarding Flags
         hasBasicProfile,
         hasProviderOnboarding,
-        hasBillingSetup,
+        hasStripeSubscription,
 
-        // Provider Status Flags
-        providerStatus,
-        isProviderApproved,
-        isProviderPending,
+        // Provider Status Flags (UPDATED)
+        isProviderActive,         // New/Replaced primary check
+        isProviderPendingConnectVerification,     // New check for Connect progress
         isProviderRejected,
 
         // Access Control

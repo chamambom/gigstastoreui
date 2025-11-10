@@ -89,7 +89,7 @@ const providerOnboardingComplete = computed(() => {
 const isApprovedProvider = computed(() => {
   return (
     currentUser.value?.roles?.includes('provider') &&
-    currentUser.value?.provider_status === 'approved'
+    currentUser.value?.provider_status === 'active'
   )
 })
 

@@ -247,7 +247,8 @@ const rules = computed(() => ({
   },
   confirmPassword: {
     required: helpers.withMessage('Password confirmation is required', required),
-    sameAsPassword: helpers.withMessage('Passwords do not match', sameAs(() => state.newPassword)),
+    // ✅ CORRECTED LINE: Pass a computed function that returns the value
+    sameAsPassword: helpers.withMessage('Passwords do not match', sameAs(computed(() => state.newPassword))),
   },
 }))
 

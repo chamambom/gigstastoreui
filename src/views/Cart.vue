@@ -1,39 +1,98 @@
-<!-- Cart.vue -->
+<!-- Cart.vue with Grouped Checkout -->
 <script setup lang="ts">
-import {computed, onMounted} from 'vue'
-import CartCard from '../components/CartCard.vue'
+import { computed, onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
+import CartGroupCard from '../components/CartGroupCard.vue'
 import CartCardSkeleton from '../components/CartCardSkeleton.vue'
-import {toCurrency} from '../shared/utils'
-import {useCartStore} from '../stores/cartStore'
-import {useProductStore} from '../stores/productStore'
+import { toCurrency } from '../shared/utils'
+import { useCartStore } from '../stores/cartStore'
+import { useCheckoutStore } from '../stores/checkOutStore'
 
+const router = useRouter()
 const cartStore = useCartStore()
-const productStore = useProductStore()
+const checkoutStore = useCheckoutStore()
+
+const isLoadingGroups = ref(false)
+const checkoutError = ref<string | null>(null)
 
 const formattedCart = computed(() => cartStore.formattedCart)
 const isLoading = computed(() => cartStore.loading && !cartStore.total_items)
 const hasError = computed(() => cartStore.error && !isLoading.value)
 
+// Grouped cart for checkout
+const cartGroups = computed(() => checkoutStore.cartGroups)
+const grandTotal = computed(() => checkoutStore.grandTotal)
+
 onMounted(async () => {
-  // Fetch cart on mount
   await cartStore.fetchCart()
+  // Fetch grouped cart for checkout preview
+  if (cartStore.count > 0) {
+    await fetchGroupedCart()
+  }
 })
 
-const handleCheckout = () => {
-  // TODO: Implement Stripe checkout
-  console.log('Checkout:', cartStore.total)
+const fetchGroupedCart = async () => {
+  isLoadingGroups.value = true
+  checkoutError.value = null
+  try {
+    await checkoutStore.fetchGroupedCart()
+  } catch (error: any) {
+    checkoutError.value = error.message || 'Failed to load checkout groups'
+  } finally {
+    isLoadingGroups.value = false
+  }
 }
 
-const handleContinueShopping = () => {
-  cartStore.clearError()
+
+const handleCheckoutAll = async () => {
+  checkoutError.value = null
+
+  try {
+    // Simply navigate to the checkout page
+    // The EmbeddedCheckout component will handle session creation
+    router.push('/checkout')
+  } catch (error: any) {
+    checkoutError.value = error.message || 'Checkout failed'
+  }
 }
+
+/**
+ * Handle checkout for a single group (navigates to embedded checkout)
+ */
+const handleCheckoutGroup = async (groupIndex: number) => {
+  console.log('🛒 Cart.vue: Received checkout event for group', groupIndex)
+  console.log('🛒 Cart.vue: Navigating to /checkout')
+
+  try {
+    await router.push('/checkout')
+    console.log('✅ Navigation successful')
+  } catch (error) {
+    console.error('❌ Navigation failed:', error)
+  }
+}
+
 </script>
 
 <template>
-  <div class="p-4 max-w-4xl mx-auto">
+  <div class="p-4 max-w-6xl mx-auto">
     <h1 class="text-3xl font-bold mb-6">Shopping Cart</h1>
 
-    <!-- Error state -->
+    <!-- Checkout Error -->
+    <div v-if="checkoutError" class="alert alert-error mb-4" role="alert">
+      <svg class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+      </svg>
+      <div>
+        <h3 class="font-bold">Checkout Error</h3>
+        <div class="text-sm">{{ checkoutError }}</div>
+      </div>
+      <button class="btn btn-sm" @click="checkoutError = null">
+        Dismiss
+      </button>
+    </div>
+
+    <!-- Cart Error -->
     <div v-if="hasError" class="alert alert-error mb-4" role="alert">
       <svg class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -63,94 +122,95 @@ const handleContinueShopping = () => {
       </router-link>
     </div>
 
-    <!-- Cart items -->
-    <div v-else class="space-y-4">
-      <CartCard
-          v-for="(cartProduct, index) in formattedCart"
-          :key="index"
-          :cart-product="cartProduct"
-      />
+    <!-- Grouped Cart for Checkout -->
+    <div v-else class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- Left: Cart Groups -->
+      <div class="lg:col-span-2 space-y-6">
+        <!-- Info Banner -->
+        <div class="alert alert-info">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+               class="stroke-current shrink-0 w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <span>Your cart is grouped by seller and payment type. Each group requires a separate checkout.</span>
+        </div>
 
-      <!-- Cart summary -->
-      <div class="card bg-base-200 mt-8">
-        <div class="card-body">
-          <h2 class="card-title text-2xl">Order Summary</h2>
-          <div class="divider"/>
+        <!-- Loading Groups -->
+        <div v-if="isLoadingGroups" class="text-center py-8">
+          <span class="loading loading-spinner loading-lg"></span>
+          <p class="mt-2 text-gray-600">Preparing checkout...</p>
+        </div>
 
-          <div class="space-y-2 mb-4">
-            <div class="flex justify-between">
-              <span>Subtotal ({{ cartStore.count }} items):</span>
-              <span>{{ toCurrency(cartStore.total) }}</span>
+        <!-- Cart Groups -->
+        <div v-else-if="cartGroups.length > 0" class="space-y-4">
+          <CartGroupCard
+            v-for="(group, index) in cartGroups"
+            :key="`${group.seller_id}-${group.is_recurring}`"
+            :group="group"
+            :group-index="index"
+            @checkout="handleCheckoutGroup"
+          />
+        </div>
+      </div>
+
+      <!-- Right: Order Summary -->
+      <div class="lg:col-span-1">
+        <div class="card bg-base-200 sticky top-4">
+          <div class="card-body">
+            <h2 class="card-title text-2xl">Order Summary</h2>
+            <div class="divider"/>
+
+            <div class="space-y-2 mb-4">
+              <div class="flex justify-between">
+                <span>Total Items:</span>
+                <span class="font-semibold">{{ cartStore.count }}</span>
+              </div>
+              <div class="flex justify-between">
+                <span>Checkout Groups:</span>
+                <span class="font-semibold">{{ cartGroups.length }}</span>
+              </div>
+              <div class="flex justify-between text-sm text-gray-600">
+                <span>Shipping:</span>
+                <span>Calculated at checkout</span>
+              </div>
+              <div class="flex justify-between text-sm text-gray-600">
+                <span>Tax:</span>
+                <span>Calculated at checkout</span>
+              </div>
             </div>
-            <div class="flex justify-between text-sm text-gray-600">
-              <span>Shipping:</span>
-              <span>Calculated at checkout</span>
+
+            <div class="divider"/>
+
+            <div class="flex justify-between text-2xl font-bold mb-6">
+              <span>Grand Total:</span>
+              <span class="text-primary">{{ toCurrency(grandTotal) }}</span>
             </div>
-            <div class="flex justify-between text-sm text-gray-600">
-              <span>Tax:</span>
-              <span>Calculated at checkout</span>
+
+            <div class="card-actions flex-col gap-2">
+              <router-link to="/" class="btn btn-ghost w-full">
+                Continue Shopping
+              </router-link>
+
+              <!-- ✅ UPDATED: Proceed to Checkout Button -->
+              <button
+                @click="handleCheckoutAll"
+                class="btn btn-primary w-full"
+                :disabled="checkoutStore.loading || cartGroups.length === 0"
+              >
+                <span v-if="checkoutStore.loading" class="loading loading-spinner"></span>
+                {{ checkoutStore.loading ? 'Processing...' : 'Proceed to Checkout' }}
+              </button>
+
+              <!-- Multiple Groups Info -->
+              <div v-if="cartGroups.length > 1" class="text-sm text-center text-gray-600 mt-2">
+                <p>You have {{ cartGroups.length }} separate checkouts.</p>
+                <p class="mt-1">Complete them one at a time on the checkout page.</p>
+              </div>
             </div>
-          </div>
-
-          <div class="divider"/>
-
-          <div class="flex justify-between text-2xl font-bold mb-6">
-            <span>Total:</span>
-            <span class="text-primary">{{ toCurrency(cartStore.total) }}</span>
-          </div>
-
-          <div class="card-actions gap-2">
-            <router-link to="/" class="btn btn-ghost flex-1">
-              Continue Shopping
-            </router-link>
-            <button
-                @click="handleCheckout"
-                class="btn btn-primary flex-1"
-                :disabled="cartStore.loading"
-            >
-              {{ cartStore.loading ? 'Processing...' : 'Proceed to Checkout' }}
-            </button>
           </div>
         </div>
       </div>
     </div>
   </div>
 </template>
-
-
-<!--<script setup lang="ts">-->
-<!--import { computed } from 'vue'-->
-<!--import CartCard from '../components/CartCard.vue'-->
-<!--import CartCardSkeleton from '../components/CartCardSkeleton.vue'-->
-<!--import { toCurrency } from '../shared/utils'-->
-<!--import { useCartStore } from '../stores/cart'-->
-<!--import { useProductStore } from '../stores/products'-->
-
-<!--const cartStore = useCartStore()-->
-<!--const productStore = useProductStore()-->
-
-<!--const formattedCart = computed(() => cartStore.formattedCart)-->
-<!--</script>-->
-
-<!--<template>-->
-<!--  <div class="p-4 max-w-4xl mx-auto">-->
-<!--    <div v-if="!productStore.loaded" class="space-y-4">-->
-<!--      <CartCardSkeleton v-for="n in 15" :key="n" />-->
-<!--    </div>-->
-<!--    <div v-else-if="!formattedCart.length">-->
-<!--      <h1 class="text-xl">-->
-<!--        Cart is empty.-->
-<!--      </h1>-->
-<!--    </div>-->
-<!--    <div v-else class="space-y-4">-->
-<!--      <CartCard-->
-<!--        v-for="(cartProduct, index) in formattedCart"-->
-<!--        :key="index"-->
-<!--        :cart-product="cartProduct"-->
-<!--      />-->
-<!--      <div class="text-right text-2xl md:text-4xl">-->
-<!--        Total: {{ toCurrency(cartStore.total) }}-->
-<!--      </div>-->
-<!--    </div>-->
-<!--  </div>-->
-<!--</template>-->

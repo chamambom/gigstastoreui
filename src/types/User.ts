@@ -32,7 +32,8 @@ export interface Address {
 export interface OnboardingStatus {
     basic_complete?: boolean;
     provider_onboarding_complete?: boolean;
-    billing_setup_complete?: boolean;
+    stripe_activate_subscription_complete?: boolean;
+    stripe_activate_connect_complete?: boolean;
 }
 
 // --- Main User Interface ---
@@ -53,7 +54,7 @@ export interface User {
 
     // Roles and Provider Status
     roles?: ('user' | 'provider' | 'admin')[];
-    provider_status: 'not_applied' | 'pending' | 'approved' | 'rejected';
+    stripe_provider_status: 'not_started' | 'onboarding_in_progress' | 'activate_free_plan_complete' | 'connect_verification_pending' | 'active' | 'rejected';
 
     // Profile Information
     full_name: string;
@@ -76,6 +77,7 @@ export interface User {
     stripe_subscription_id?: string;
     stripe_subscription_price_id?: string;
     stripe_payment_method_id?: string;
+    stripe_connect_account_id?: string;
 
     // Provider Stats
     overallProviderRating: number;

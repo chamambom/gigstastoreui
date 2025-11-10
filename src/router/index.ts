@@ -14,10 +14,11 @@ const ProductForm = () => import('../components/ProductForm.vue')
 // Onboarding / dashboards
 const ProviderDashboard = () => import('../views/ProviderDashboardPageView.vue')
 const SeekerDashboard = () => import('../views/SeekerDashboard.vue')
-const ProviderOnboarding = () => import('../views/ProviderOnboarding.vue')
-const BillingSetup = () => import('../views/BillingSetup.vue')
-const ProviderAwaitingVerification = () => import('../views/ProviderAwaitingVerification.vue')
-const OnboardingRouter = () => import('../views/OnboardingRouter.vue')
+const ProviderOnboarding = () => import('../views/OnboardingPages/ProviderOnboarding.vue')
+const ActivateStripeSubscription = () => import('../views/OnboardingPages/StripeSubscriptionOnboarding.vue')
+const ProviderAwaitingVerification = () => import('../views/OnboardingPages/ProviderAwaitingVerification.vue')
+const OnboardingRouter = () => import('../views/OnboardingPages/OnboardingRouter.vue')
+const ActivateStripeConnect = () => import('../views/OnboardingPages/StripeConnectOnboarding.vue')
 
 // Shared named views
 const TopNavBar = () => import('../components/Nav.vue')
@@ -92,7 +93,7 @@ const routes: RouteRecordRaw[] = [
         name: 'FacebookOAuthCallback',
         meta: {requiresAuth: false},
         components: {
-            default: () => import('@/components/FacebookOAuthCallback.vue'),
+            default: () => import('../components/FacebookOAuthCallback.vue'),
             TopNavBar: () => import('../components/Nav.vue'),
         },
     },
@@ -194,6 +195,18 @@ const routes: RouteRecordRaw[] = [
             LoggedInLeftSideBarMenu,
         },
     },
+    {
+        path: '/checkout',
+        name: 'Checkout',
+        component: () => import('@/views/EmbeddedCheckOut.vue'),
+        meta: {requiresAuth: true}
+    },
+    {
+        path: '/checkout/success',
+        name: 'CheckoutSuccess',
+        meta: {requiresAuth: true},
+        component: () => import('../views/CheckOutSuccess.vue')
+    },
 
     // =================================================================================
     // Dashboards / Onboarding
@@ -252,11 +265,21 @@ const routes: RouteRecordRaw[] = [
         },
     },
     {
-        path: '/onboarding/billing-setup',
-        name: 'billing-setup',
+        path: '/onboarding/activate-stripe-subscription',
+        name: 'activate-stripe-subscription',
         meta: {requiresAuth: true, requiredRoles: ['provider'], isProviderOnly: true},
         components: {
-            default: BillingSetup,
+            default: ActivateStripeSubscription,
+            TopNavBar,
+            FooterPage,
+        },
+    },
+    {
+        path: '/activate-stripe-connect',
+        name: 'activate-stripe-connect',
+        meta: {requiresAuth: true, isProviderOnly: true},
+        components: {
+            default: ActivateStripeConnect,
             TopNavBar,
             FooterPage,
         },
@@ -318,10 +341,9 @@ const router = createRouter({
 })
 
 
+import type {User} from '@/types/User'
 import type {NavigationGuardNext, RouteLocationNormalized} from 'vue-router';
 import {useAuthStore} from '@/stores/authStore';
-// import ProductForm from "@/components/ProductForm.vue";
-// import SellerProducts from "@/views/SellerProducts.vue"; // Adjust path to your auth store
 
 // Define types for your route meta
 declare module 'vue-router' {
@@ -334,18 +356,20 @@ declare module 'vue-router' {
 }
 
 // Define user type for better type safety
-interface User {
-    email?: string;
-    is_verified?: boolean;
-    is_provisional?: boolean;
-    roles?: string[];
-    provider_status?: string;
-    onboarding_status?: {
-        basic_complete?: boolean;
-        provider_onboarding_complete?: boolean;
-        billing_setup_complete?: boolean;
-    };
-}
+// interface User {
+//     email?: string;
+//     is_verified?: boolean;
+//     is_provisional?: boolean;
+//     roles?: string[];
+//     provider_status?: string;
+//     onboarding_status?: {
+//         basic_complete?: boolean;
+//         provider_onboarding_complete?: boolean;
+//         activate_free_plan_complete?: boolean;
+//     };
+// }
+
+// router/index.ts - UPDATED Router Guard Logic
 
 router.beforeEach(async (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
     console.group('Router Guard Check');
@@ -356,12 +380,12 @@ router.beforeEach(async (to: RouteLocationNormalized, from: RouteLocationNormali
 
     // Debugging current token and user state
     const tokenFromGetterCheck = !!localStorage.getItem('token');
-    const userFromGetterCheck = !!authStore.user; // Direct access to store state
-    console.log(`DEBUG: Getter component 1 (token): ${tokenFromGetterCheck}`);
-    console.log(`DEBUG: Getter component 2 (state.user): ${userFromGetterCheck}`);
+    const userFromGetterCheck = !!authStore.user;
+    console.log(`DEBUG: Token exists: ${tokenFromGetterCheck}`);
+    console.log(`DEBUG: User in store: ${userFromGetterCheck}`);
 
-    const isAuthenticated = authStore.isAuthenticated; // Assuming you have this getter in Pinia
-    let currentUser: User | null = authStore.user; // Direct access
+    const isAuthenticated = authStore.isAuthenticated;
+    let currentUser: User | null = authStore.user;
     const tokenInLocalStorage = localStorage.getItem('token');
 
     console.log(`Guard sees - isAuthenticated: ${isAuthenticated}`);
@@ -374,7 +398,8 @@ router.beforeEach(async (to: RouteLocationNormalized, from: RouteLocationNormali
     const UNVERIFIED_EMAIL_ROUTE_NAME = 'CheckEmail';
     const BASIC_PROFILE_ROUTE_NAME = 'complete-profile';
     const PROVIDER_ONBOARDING_ROUTE_NAME = 'provider-onboarding-details';
-    const BILLING_SETUP_ROUTE_NAME = 'billing-setup';
+    const ACTIVATE_STRIPE_SUBSCRIPTION_ROUTE_NAME = 'activate-stripe-subscription';
+    const ACTIVATE_STRIPE_CONNECT_ROUTE_NAME = 'activate-stripe-connect';
     const ONBOARDING_CHOICE_ROUTE_NAME = 'onboarding-choice';
     const PROVIDER_AWAITING_VERIFICATION_ROUTE_NAME = 'awaiting-verification';
 
@@ -382,12 +407,12 @@ router.beforeEach(async (to: RouteLocationNormalized, from: RouteLocationNormali
     if (tokenInLocalStorage && !currentUser) {
         try {
             console.log("Guard: Token found, but store.user is null. Dispatching 'viewUser'.");
-            await authStore.viewUser(); // Direct store action call
-            currentUser = authStore.user; // Update currentUser after successful fetch
+            await authStore.viewUser();
+            currentUser = authStore.user;
             console.log("Guard: 'viewUser' successful. New currentUser state:", currentUser);
         } catch (error) {
             console.warn("Guard: 'viewUser' failed. Clearing user and redirecting to login:", error);
-            await authStore.clearUser(); // Direct store action call
+            await authStore.clearUser();
             if (to.meta.requiresAuth && !PUBLIC_ROUTES.includes(to.name as string)) {
                 console.groupEnd();
                 return next({name: 'Login', query: {redirect: to.fullPath}});
@@ -403,20 +428,34 @@ router.beforeEach(async (to: RouteLocationNormalized, from: RouteLocationNormali
     const isProvisional = currentUser?.is_provisional === true;
     const isBasicProfileComplete = currentUser?.onboarding_status?.basic_complete === true;
     const isProviderOnboardingComplete = currentUser?.onboarding_status?.provider_onboarding_complete === true;
-    const isBillingSetupComplete = currentUser?.onboarding_status?.billing_setup_complete === true;
+    const isStripeActivateSubscriptionComplete = currentUser?.onboarding_status?.stripe_activate_subscription_complete === true;
+    const isStripeActivateConnectComplete = currentUser?.onboarding_status?.stripe_activate_connect_complete === true;
+    const hasStripeConnectAccount = !!currentUser?.stripe_connect_account_id;
     const userRoles = currentUser?.roles || [];
     const isUserSeeker = userRoles.includes('user');
     const isUserProvider = userRoles.includes('provider');
-    const providerStatus = currentUser?.provider_status;
-    const isProviderApproved = providerStatus === 'approved';
+
+    // --- Status Checks ---
+    const stripeProviderStatus = currentUser?.stripe_provider_status;
+
+    const isProviderActive = stripeProviderStatus === 'active';
+    const isProviderConnectVerificationPending = stripeProviderStatus === 'connect_verification_pending';
+    const isProviderRejected = stripeProviderStatus === 'rejected';
 
     console.log(`Guard (Post-viewUser) - currentIsLoggedIn: ${currentIsLoggedIn}`);
     console.log(`Guard (Post-viewUser) - isEmailVerified: ${isEmailVerified}`);
     console.log(`Guard (Post-viewUser) - isProvisional: ${isProvisional}`);
     console.log(`Guard (Post-viewUser) - isBasicProfileComplete: ${isBasicProfileComplete}`);
+    console.log(`Guard (Post-viewUser) - isProviderOnboardingComplete: ${isProviderOnboardingComplete}`);
+    console.log(`Guard (Post-viewUser) - isStripeActivateSubscriptionComplete: ${isStripeActivateSubscriptionComplete}`);
+    console.log(`Guard (Post-viewUser) - hasStripeConnectAccount: ${hasStripeConnectAccount}`);
+    console.log(`Guard (Post-viewUser) - isStripeActivateConnectComplete: ${isStripeActivateConnectComplete}`);
     console.log(`Guard (Post-viewUser) - isUserSeeker: ${isUserSeeker}`);
     console.log(`Guard (Post-viewUser) - isUserProvider: ${isUserProvider}`);
-    console.log(`Guard (Post-viewUser) - isProviderApproved: ${isProviderApproved}`);
+    console.log(`Guard (Post-viewUser) - stripeProviderStatus: ${stripeProviderStatus}`);
+    console.log(`Guard (Post-viewUser) - isProviderActive: ${isProviderActive}`);
+    console.log(`Guard (Post-viewUser) - isProviderConnectVerificationPending: ${isProviderConnectVerificationPending}`);
+    console.log(`Guard (Post-viewUser) - isProviderRejected: ${isProviderRejected}`);
 
     // --- Core Logic for Redirection ---
 
@@ -458,15 +497,40 @@ router.beforeEach(async (to: RouteLocationNormalized, from: RouteLocationNormali
             console.groupEnd();
             return next({name: UNVERIFIED_EMAIL_ROUTE_NAME});
         }
+
         if (isEmailVerified && to.name === UNVERIFIED_EMAIL_ROUTE_NAME) {
             console.log(`Guard: User ${currentUser.email} email verified, trying to access CheckEmail. Redirecting to appropriate next step.`);
-            if (isProvisional) return next({name: ONBOARDING_CHOICE_ROUTE_NAME});
+            if (isProvisional) {
+                console.groupEnd();
+                return next({name: ONBOARDING_CHOICE_ROUTE_NAME});
+            }
             if (isUserProvider) {
-                if (!isBasicProfileComplete) return next({name: BASIC_PROFILE_ROUTE_NAME});
-                if (!isProviderOnboardingComplete) return next({name: PROVIDER_ONBOARDING_ROUTE_NAME});
-                if (!isBillingSetupComplete) return next({name: BILLING_SETUP_ROUTE_NAME});
-                if (providerStatus === 'pending') return next({name: PROVIDER_AWAITING_VERIFICATION_ROUTE_NAME});
-                if (isProviderApproved) return next({name: 'ProviderDashboard'});
+                if (!isBasicProfileComplete) {
+                    console.groupEnd();
+                    return next({name: BASIC_PROFILE_ROUTE_NAME});
+                }
+                if (!isProviderOnboardingComplete) {
+                    console.groupEnd();
+                    return next({name: PROVIDER_ONBOARDING_ROUTE_NAME});
+                }
+                if (!isStripeActivateSubscriptionComplete) {
+                    console.groupEnd();
+                    return next({name: ACTIVATE_STRIPE_SUBSCRIPTION_ROUTE_NAME});
+                }
+                // ✅ NEW: If they have Connect account + pending status, send to awaiting page
+                if (hasStripeConnectAccount && isProviderConnectVerificationPending) {
+                    console.groupEnd();
+                    return next({name: PROVIDER_AWAITING_VERIFICATION_ROUTE_NAME});
+                }
+                // ✅ NEW: If subscription complete but no Connect account, send to Connect setup
+                if (!hasStripeConnectAccount) {
+                    console.groupEnd();
+                    return next({name: ACTIVATE_STRIPE_CONNECT_ROUTE_NAME});
+                }
+                if (isProviderActive) {
+                    console.groupEnd();
+                    return next({name: 'ProviderDashboard'});
+                }
             }
             console.groupEnd();
             return next({name: 'SeekerDashboard'});
@@ -483,14 +547,35 @@ router.beforeEach(async (to: RouteLocationNormalized, from: RouteLocationNormali
             console.groupEnd();
             return next();
         }
+
         if (isEmailVerified && !isProvisional && to.name === ONBOARDING_CHOICE_ROUTE_NAME) {
             console.log(`Guard: User ${currentUser.email} is no longer provisional, trying to access ${ONBOARDING_CHOICE_ROUTE_NAME}. Redirecting.`);
             if (isUserProvider) {
-                if (!isBasicProfileComplete) return next({name: BASIC_PROFILE_ROUTE_NAME});
-                if (!isProviderOnboardingComplete) return next({name: PROVIDER_ONBOARDING_ROUTE_NAME});
-                if (!isBillingSetupComplete) return next({name: BILLING_SETUP_ROUTE_NAME});
-                if (providerStatus === 'pending') return next({name: PROVIDER_AWAITING_VERIFICATION_ROUTE_NAME});
-                if (isProviderApproved) return next({name: 'ProviderDashboard'});
+                if (!isBasicProfileComplete) {
+                    console.groupEnd();
+                    return next({name: BASIC_PROFILE_ROUTE_NAME});
+                }
+                if (!isProviderOnboardingComplete) {
+                    console.groupEnd();
+                    return next({name: PROVIDER_ONBOARDING_ROUTE_NAME});
+                }
+                if (!isStripeActivateSubscriptionComplete) {
+                    console.groupEnd();
+                    return next({name: ACTIVATE_STRIPE_SUBSCRIPTION_ROUTE_NAME});
+                }
+                // ✅ NEW: Check for Connect account status
+                if (hasStripeConnectAccount && isProviderConnectVerificationPending) {
+                    console.groupEnd();
+                    return next({name: PROVIDER_AWAITING_VERIFICATION_ROUTE_NAME});
+                }
+                if (!hasStripeConnectAccount) {
+                    console.groupEnd();
+                    return next({name: ACTIVATE_STRIPE_CONNECT_ROUTE_NAME});
+                }
+                if (isProviderActive) {
+                    console.groupEnd();
+                    return next({name: 'ProviderDashboard'});
+                }
             }
             console.groupEnd();
             return next({name: 'SeekerDashboard'});
@@ -526,52 +611,98 @@ router.beforeEach(async (to: RouteLocationNormalized, from: RouteLocationNormali
                     return next();
                 }
 
-                // Onboarding Check 3: Billing Setup
-                if (isProviderOnboardingComplete && !isBillingSetupComplete) {
-                    if (to.name !== BILLING_SETUP_ROUTE_NAME) {
-                        console.log(`Guard: Provider ${currentUser.email} provider onboarding complete but billing incomplete. Redirecting to ${BILLING_SETUP_ROUTE_NAME}.`);
+                // Onboarding Check 3: Stripe Subscription Activation
+                if (isProviderOnboardingComplete && !isStripeActivateSubscriptionComplete) {
+                    if (to.name !== ACTIVATE_STRIPE_SUBSCRIPTION_ROUTE_NAME) {
+                        console.log(`Guard: Provider ${currentUser.email} provider onboarding complete but subscription incomplete. Redirecting to ${ACTIVATE_STRIPE_SUBSCRIPTION_ROUTE_NAME}.`);
                         console.groupEnd();
-                        return next({name: BILLING_SETUP_ROUTE_NAME});
+                        return next({name: ACTIVATE_STRIPE_SUBSCRIPTION_ROUTE_NAME});
                     }
-                    console.log(`Guard: Provider ${currentUser.email} is on billing setup page and it's incomplete. Allowing.`);
+                    console.log(`Guard: Provider ${currentUser.email} is on subscription setup page. Allowing.`);
                     console.groupEnd();
                     return next();
                 }
 
-                // Onboarding Check 4: Awaiting Admin Approval
-                if (isBillingSetupComplete && providerStatus === 'pending') {
-                    if (isProviderRouteAttempt && to.name !== PROVIDER_AWAITING_VERIFICATION_ROUTE_NAME) {
-                        console.log(`Guard: Pending Provider ${currentUser.email} trying to access provider-only route. Redirecting to awaiting verification.`);
-                        console.groupEnd();
-                        return next({name: PROVIDER_AWAITING_VERIFICATION_ROUTE_NAME});
-                    }
-                    if (to.name === PROVIDER_AWAITING_VERIFICATION_ROUTE_NAME) {
-                        console.log(`Guard: Pending Provider ${currentUser.email} on awaiting verification page. Allowing.`);
+                // ✅ Onboarding Check 4: Stripe Connect Setup (NEW LOGIC)
+                if (isStripeActivateSubscriptionComplete) {
+
+                    // 4a. No Connect account exists yet - send to Connect setup page
+                    if (!hasStripeConnectAccount) {
+                        if (to.name !== ACTIVATE_STRIPE_CONNECT_ROUTE_NAME) {
+                            console.log(`Guard: Provider ${currentUser.email} needs to initiate Stripe Connect. Redirecting to ${ACTIVATE_STRIPE_CONNECT_ROUTE_NAME}.`);
+                            console.groupEnd();
+                            return next({name: ACTIVATE_STRIPE_CONNECT_ROUTE_NAME});
+                        }
+                        console.log(`Guard: Provider ${currentUser.email} on Stripe Connect setup page. Allowing.`);
                         console.groupEnd();
                         return next();
                     }
-                    console.log(`Guard: Pending Provider ${currentUser.email} attempting a non-provider route. Allowing navigation.`);
-                    console.groupEnd();
-                    return next();
+
+                    // 4b. Connect account exists + verification pending - send to awaiting page
+                    if (hasStripeConnectAccount && isProviderConnectVerificationPending) {
+                        // Allow them to stay on awaiting verification page
+                        if (to.name === PROVIDER_AWAITING_VERIFICATION_ROUTE_NAME) {
+                            console.log(`Guard: Provider ${currentUser.email} on awaiting verification page. Allowing.`);
+                            console.groupEnd();
+                            return next();
+                        }
+
+                        // Block access to provider-only routes until verified
+                        if (isProviderRouteAttempt) {
+                            console.log(`Guard: Provider ${currentUser.email} awaiting verification. Cannot access provider routes. Redirecting to ${PROVIDER_AWAITING_VERIFICATION_ROUTE_NAME}.`);
+                            console.groupEnd();
+                            return next({name: PROVIDER_AWAITING_VERIFICATION_ROUTE_NAME});
+                        }
+
+                        // Redirect away from earlier onboarding steps
+                        if (to.name === BASIC_PROFILE_ROUTE_NAME ||
+                            to.name === PROVIDER_ONBOARDING_ROUTE_NAME ||
+                            to.name === ACTIVATE_STRIPE_SUBSCRIPTION_ROUTE_NAME ||
+                            to.name === ACTIVATE_STRIPE_CONNECT_ROUTE_NAME) {
+                            console.log(`Guard: Provider ${currentUser.email} trying to access completed steps. Redirecting to ${PROVIDER_AWAITING_VERIFICATION_ROUTE_NAME}.`);
+                            console.groupEnd();
+                            return next({name: PROVIDER_AWAITING_VERIFICATION_ROUTE_NAME});
+                        }
+
+                        // Allow non-provider routes (e.g., seeker dashboard)
+                        console.log(`Guard: Pending Provider ${currentUser.email} accessing non-provider route. Allowing.`);
+                        console.groupEnd();
+                        return next();
+                    }
+
+                    // 4c. Handle rejected status
+                    if (isProviderRejected) {
+                        if (to.name !== PROVIDER_AWAITING_VERIFICATION_ROUTE_NAME) {
+                            console.log(`Guard: Provider ${currentUser.email} is rejected. Redirecting to awaiting page.`);
+                            console.groupEnd();
+                            return next({name: PROVIDER_AWAITING_VERIFICATION_ROUTE_NAME});
+                        }
+                        console.log(`Guard: Rejected Provider ${currentUser.email} on awaiting page. Allowing.`);
+                        console.groupEnd();
+                        return next();
+                    }
                 }
 
-                // G. Handle Approved Providers
-                if (isProviderApproved) {
+                // Onboarding Check 5: Active Provider (Final Success State)
+                if (isProviderActive) {
+                    // Redirect away from onboarding pages to provider dashboard
                     if (to.name === BASIC_PROFILE_ROUTE_NAME ||
                         to.name === PROVIDER_ONBOARDING_ROUTE_NAME ||
-                        to.name === BILLING_SETUP_ROUTE_NAME ||
+                        to.name === ACTIVATE_STRIPE_SUBSCRIPTION_ROUTE_NAME ||
+                        to.name === ACTIVATE_STRIPE_CONNECT_ROUTE_NAME ||
                         to.name === PROVIDER_AWAITING_VERIFICATION_ROUTE_NAME ||
                         to.name === 'SeekerDashboard') {
-                        console.log(`Guard: Approved Provider ${currentUser.email} trying to access completed onboarding/seeker pages. Redirecting to ProviderDashboard.`);
+                        console.log(`Guard: Active Provider ${currentUser.email} trying to access completed onboarding/seeker pages. Redirecting to ProviderDashboard.`);
                         console.groupEnd();
                         return next({name: 'ProviderDashboard'});
                     }
-                    console.log(`Guard: User ${currentUser.email} is an approved provider. Allowing navigation to ${to.fullPath}.`);
+                    console.log(`Guard: Provider ${currentUser.email} is ACTIVE. Allowing navigation to ${to.fullPath}.`);
                     console.groupEnd();
                     return next();
                 }
 
-                console.log(`Guard: Provider ${currentUser.email} is on correct onboarding step or accessing a non-provider-only route. Allowing navigation.`);
+                // Fallback: Allow navigation if no specific condition matched
+                console.log(`Guard: Provider ${currentUser.email} passed all checks. Allowing navigation.`);
                 console.groupEnd();
                 return next();
             }
@@ -624,5 +755,4 @@ router.beforeEach(async (to: RouteLocationNormalized, from: RouteLocationNormali
     console.groupEnd();
     next();
 });
-
-export default router
+export default router;
