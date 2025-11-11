@@ -365,20 +365,6 @@ declare module 'vue-router' {
     }
 }
 
-// Define user type for better type safety
-// interface User {
-//     email?: string;
-//     is_verified?: boolean;
-//     is_provisional?: boolean;
-//     roles?: string[];
-//     provider_status?: string;
-//     onboarding_status?: {
-//         basic_complete?: boolean;
-//         provider_onboarding_complete?: boolean;
-//         activate_free_plan_complete?: boolean;
-//     };
-// }
-
 // router/index.ts - UPDATED Router Guard Logic
 
 // router.beforeEach(async (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
@@ -732,7 +718,7 @@ declare module 'vue-router' {
 //                 }
 //
 //                 if (to.meta.requiredRoles) {
-//                     const hasRequiredRole = to.meta.requiredRoles.some(role => userRoles.includes(role));
+//                     const hasRequiredRole = to.meta.requiredRoles.some(role => (userRoles as string[]).includes(role));
 //                     if (!hasRequiredRole) {
 //                         console.log(`Guard: Seeker ${currentUser.email} lacks required roles for ${to.fullPath}. Redirecting to SeekerDashboard.`);
 //                         console.groupEnd();
@@ -751,7 +737,7 @@ declare module 'vue-router' {
 //     if (to.meta.requiredRoles && currentIsLoggedIn && currentUser) {
 //         const requiredRoles = to.meta.requiredRoles;
 //         const userRoles = currentUser.roles || [];
-//         const hasRequiredRole = requiredRoles.some(role => userRoles.includes(role));
+//         const hasRequiredRole = requiredRoles.some(role => (userRoles as string[]).includes(role));
 //
 //         if (!hasRequiredRole) {
 //             console.log(`Guard: User ${currentUser.email} lacks required roles ${requiredRoles} for ${to.fullPath}. Redirecting.`);

@@ -97,7 +97,7 @@ export function useAuthFlags() {
         isAuthenticated.value &&
         isProvider.value
         // // (providerStatus.value === 'pending' || providerStatus.value === 'rejected')
-        // (isProviderPendingAdmin.value || isProviderRejected.value || isProviderPendingConnectVerification.value)
+        // (isProviderPendingConnectVerificationAdmin.value || isProviderRejected.value || isProviderPendingConnectVerificationConnectVerification.value)
     );
 
 

@@ -448,7 +448,7 @@
       </div>
     </section>
 
-    <div v-if="isProviderPending" class="alert alert-info mb-4">
+    <div v-if="isProviderPendingConnectVerification" class="alert alert-info mb-4">
   <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
   </svg>
@@ -476,10 +476,10 @@ const router = useRouter()
 const authStore = useAuthStore()
 const {isLoggedIn, isProvider, isSeeker, hasBasicProfile, currentUser} = useAuthFlags()
 
-const isProviderPending = computed(() => {
+const isProviderPendingConnectVerification = computed(() => {
   const user = authStore.user
   return user?.roles?.includes('provider') &&
-         user?.provider_status === 'connect_verification_pending'
+         user?.stripe_provider_status === 'connect_verification_pending'
 })
 
 // Navigation

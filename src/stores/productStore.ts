@@ -1,11 +1,15 @@
 import {defineStore} from 'pinia'
 import axios from 'axios'
 
+export type ProductStatus = 'draft' | 'published' | 'archived';
+export type Interval = 'day' | 'week' | 'month' | 'year' | null;
+
+
 export interface MediaFile {
     url: string
     object_key: string
     file_type: 'image' | 'video'
-    size?: number
+    size: number
     uploaded_at: string
 }
 
@@ -13,8 +17,8 @@ export interface SellerInfo {
     _id: string
     tradingName: string
     address?: {
-        city: string
-        locality: string
+        city?: string
+        locality?: string
     }
     overallProviderRating?: number | null
     totalProviderReviews?: number | null
@@ -27,14 +31,18 @@ export interface Product {
     description: string
     price: number
     category: string
-    image: string
-    status: 'draft' | 'published' | 'archived'
-    stock: number // New field for inventory quantity
+    stock: number
+    status: ProductStatus
+    stripe_product_id?: string
+    stripe_price_id?: string
+    is_recurring?: boolean
+    interval?: Interval
+    media: MediaFile[]
+    seller?: SellerInfo
     created_at: string
     updated_at: string
-    seller?: SellerInfo
-    media: MediaFile[]
 }
+
 
 interface ProductsState {
     items: Record<string, Product>
@@ -307,19 +315,19 @@ export const useProductStore = defineStore('products', {
                     // Also update the primary 'image' field if the deleted file was the primary one
                     const deletedUrl = product.media.find(m => m.object_key === objectKey)?.url;
 
-                    let newPrimaryImageUrl = product.image;
+                    let newPrimaryImageUrl = product.media?.[0]?.url || '';
+
 
                     // If the deleted image was the primary one (i.e., its URL matched the main image URL)
                     if (newPrimaryImageUrl === deletedUrl) {
                         // Set new primary image to the first remaining image, or empty string
-                        newPrimaryImageUrl = updatedMedia.length > 0 ? updatedMedia[0].url : '';
+                        newPrimaryImageUrl = updatedMedia.length > 0 ? updatedMedia[0]!.url : '';
                     }
 
                     // Deep merge update for reactivity
                     this.items[productId] = {
                         ...product,
                         media: updatedMedia,
-                        image: newPrimaryImageUrl
                     };
                 }
             } catch (error) {

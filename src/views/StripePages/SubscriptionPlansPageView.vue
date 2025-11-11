@@ -455,11 +455,9 @@ const {
   isProvisional,
   canAccessProviderDashboard,
   currentUser,
-  isProviderApproved,
-  isProviderPending,
+  isProviderActive,
   isProviderRejected,
   showBecomeProviderCTA,
-  providerStatus,
   needsEmailVerification,
 } = useAuthFlags()
 

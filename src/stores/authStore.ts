@@ -159,7 +159,7 @@ export const useAuthStore = defineStore('auth', {
 
         // async setProviderPending(): Promise<void> {
         //     const token = localStorage.getItem('token');
-        //     await axios.patch('/api/v1/user/set-provider-pending', {provider_status: 'pending'}, {
+        //     await axios.patch('/api/v1/user/set-provider-pending', {stripe_provider_status: 'pending'}, {
         //         headers: {'Authorization': `Bearer ${token}`},
         //     });
         // },
@@ -172,15 +172,15 @@ export const useAuthStore = defineStore('auth', {
         // The payload sends the explicit status 'pending_requirements'
         // which matches the next logical state after 'billing_setup_complete: true'.
         const response = await axios.patch('/api/v1/user/set-provider-status', {
-          provider_status: 'pending_requirements',
+          stripe_provider_status: 'pending_requirements',
         });
 
         // Assuming the backend returns the full updated user object or the new status in response.data
         if (this.user) {
           // It is safest to assume the backend returns the new status field, or the full user object.
           // We will use the status sent in the payload as a fallback if the full user is not returned.
-          const newStatus = response.data?.provider_status || 'pending_requirements';
-          this.user.provider_status = newStatus;
+          const newStatus = response.data?.stripe_provider_status || 'pending_requirements';
+          this.user.stripe_provider_status = newStatus;
 
           // Optional: You might also want to update the onboarding_status if needed,
           // although the frontend check already confirms billing_setup_complete is true.

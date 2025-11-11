@@ -11,7 +11,7 @@
           :class="isFullWidthPage ? 'w-full' : (isCurrentUserProvider ? 'container-sidebar' : 'container-navbar')"
           class="flex flex-col pt-0"
       >
-<!--        <RouterView name="SiteMapBar"/>-->
+        <!--        <RouterView name="SiteMapBar"/>-->
 
       </div>
 
@@ -58,9 +58,9 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
-import { useRoute } from 'vue-router'
-import { useAuthFlags } from '@/composables/useAuthFlags.js'
+import {computed} from 'vue'
+import {useRoute} from 'vue-router'
+import {useAuthFlags} from '@/composables/useAuthFlags.js'
 
 // 🟢 useAuthFlags handles auth state — no store import needed
 const {
@@ -80,16 +80,17 @@ const isCurrentUserProvider = computed(() => {
 const providerOnboardingComplete = computed(() => {
   const onboarding = currentUser.value?.onboarding_status || {}
   return (
-    onboarding.basic_complete &&
-    onboarding.provider_onboarding_complete &&
-    onboarding.billing_setup_complete
+      onboarding.basic_complete &&
+      onboarding.provider_onboarding_complete &&
+      onboarding.stripe_activate_subscription_complete &&
+      onboarding.stripe_activate_connect_complete
   )
 })
 
 const isApprovedProvider = computed(() => {
   return (
-    currentUser.value?.roles?.includes('provider') &&
-    currentUser.value?.provider_status === 'active'
+      currentUser.value?.roles?.includes('provider') &&
+      currentUser.value?.stripe_provider_status === 'active'
   )
 })
 

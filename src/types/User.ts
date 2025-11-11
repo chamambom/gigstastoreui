@@ -34,6 +34,7 @@ export interface OnboardingStatus {
     provider_onboarding_complete?: boolean;
     stripe_activate_subscription_complete?: boolean;
     stripe_activate_connect_complete?: boolean;
+    stripe_connect_initiated_at?: string;
 }
 
 // --- Main User Interface ---

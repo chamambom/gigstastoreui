@@ -19,7 +19,6 @@ const formData = ref({
   price: 0,
   category: '',
   stock: 0, // Initialize stock to 0
-  image: '',
   status: 'draft' as 'draft' | 'published' | 'archived',
   is_recurring: false, // Tracks if this is a subscription product
   interval: 'month' as 'day' | 'week' | 'month' | 'year' | null // Default interval
@@ -98,7 +97,6 @@ const loadProduct = async () => {
       price: product.price,
       category: product.category,
       stock: product.stock, // Load existing stock
-      image: product.image,
       status: product.status,
       is_recurring: product.is_recurring || false, // Assuming your store loads this from the database
       interval: product.interval as 'day' | 'week' | 'month' | 'year' | null || 'month'
@@ -150,7 +148,6 @@ const uploadProductImage = async (productId: string) => {
     const file = imageFile.value
     const uploadResponse = await productStore.requestUploadUrl(productId, file)
     const {uploadUrl, objectKey, fileType, fileSize} = uploadResponse
-
     await productStore.uploadFileToR2(uploadUrl, file)
 
     const confirmedProduct = await productStore.confirmUpload(
@@ -159,12 +156,6 @@ const uploadProductImage = async (productId: string) => {
         fileType,
         fileSize
     )
-
-    // Update formData.image with the primary URL for compatibility (first image)
-    const primaryImage = confirmedProduct.media.find(m => m.file_type === 'image')
-    if (primaryImage) {
-      formData.value.image = primaryImage.url
-    }
 
     imageFile.value = null
     localImagePreviewUrl.value = null
@@ -228,14 +219,13 @@ const validateForm = (): boolean => {
 
   // Image validation:
   const hasExistingMedia = currentMedia.value.length > 0
-  const hasExistingImageField = !!formData.value.image.trim() // check compatibility field
 
   if (!props.isEdit) {
     if (!imageFile.value) {
       error.value = 'A product image must be uploaded.'
       return false
     }
-  } else if (!hasExistingMedia && !imageFile.value && !hasExistingImageField) {
+  } else if (!hasExistingMedia && !imageFile.value) {
     error.value = 'Please upload an image or ensure an existing image is present.'
     return false
   }
@@ -256,12 +246,12 @@ const handleSubmit = async () => {
     const productPayload = {
       ...formData.value,
       // If not recurring, ensure interval is explicitly null for the backend
-      interval: formData.value.is_recurring ? formData.value.interval : null
+      interval: formData.value.is_recurring ? formData.value.interval : null,
+      media: [] // start empty; will be updated after upload
     }
 
     // 1. CREATE FLOW: Create product first to get ID
     if (!props.isEdit) {
-      productPayload.image = '' // ✅ Modify the existing productPayload
       const savedProduct = await productStore.createProduct(productPayload)
       productIdToUse = savedProduct._id
     }
@@ -330,7 +320,7 @@ watch(() => formData.value.is_recurring, (newValue) => {
               type="text"
               placeholder="e.g., Premium Wireless Headphones"
               class="input input-bordered w-full"
-              :disabled="loading || isUploading || deletingMediaKey"
+              :disabled="loading || isUploading || !!deletingMediaKey"
               required
           />
         </div>
@@ -343,7 +333,7 @@ watch(() => formData.value.is_recurring, (newValue) => {
               v-model="formData.description"
               placeholder="Describe your product in detail..."
               class="textarea textarea-bordered h-32"
-              :disabled="loading || isUploading || deletingMediaKey"
+              :disabled="loading || isUploading || !!deletingMediaKey"
               required
           />
         </div>
@@ -360,7 +350,7 @@ watch(() => formData.value.is_recurring, (newValue) => {
                 min="0"
                 placeholder="0.00"
                 class="input input-bordered w-full"
-                :disabled="loading || isUploading || deletingMediaKey"
+                :disabled="loading || isUploading || !!deletingMediaKey"
                 required
             />
           </div>
@@ -372,7 +362,7 @@ watch(() => formData.value.is_recurring, (newValue) => {
             <select
                 v-model="formData.category"
                 class="select select-bordered w-full"
-                :disabled="loading || isUploading || deletingMediaKey"
+                :disabled="loading || isUploading || !!deletingMediaKey"
                 required
             >
               <option value="" disabled>Select a category</option>
@@ -391,7 +381,7 @@ watch(() => formData.value.is_recurring, (newValue) => {
                     type="checkbox"
                     class="checkbox checkbox-primary"
                     v-model="formData.is_recurring"
-                    :disabled="loading || isUploading || deletingMediaKey"
+                    :disabled="loading || isUploading || !!deletingMediaKey"
                 />
                 <span class="label-text">Set as a **Recurring Subscription**</span>
               </label>
@@ -407,7 +397,7 @@ watch(() => formData.value.is_recurring, (newValue) => {
               <select
                   v-model="formData.interval"
                   class="select select-bordered w-full"
-                  :disabled="loading || isUploading || deletingMediaKey"
+                  :disabled="loading || isUploading || !!deletingMediaKey"
                   required
               >
                 <option value="" disabled>Select billing cycle</option>
@@ -440,7 +430,7 @@ watch(() => formData.value.is_recurring, (newValue) => {
                   min="0"
                   placeholder="100"
                   class="input input-bordered w-full"
-                  :disabled="loading || isUploading || deletingMediaKey"
+                  :disabled="loading || isUploading || !!deletingMediaKey"
                   required
               />
               <label class="label">
@@ -461,7 +451,7 @@ watch(() => formData.value.is_recurring, (newValue) => {
                 @change="handleFileChange"
                 accept="image/*"
                 class="file-input file-input-bordered w-full"
-                :disabled="loading || isUploading || deletingMediaKey"
+                :disabled="loading || isUploading || !!deletingMediaKey"
                 :required="!isEdit"
             />
             <label class="label">
@@ -487,9 +477,6 @@ watch(() => formData.value.is_recurring, (newValue) => {
                     alt="Product media"
                     class="w-full h-32 object-cover rounded-lg border"
                 />
-                <div v-if="formData.image === media.url" class="absolute top-1 left-1 badge badge-primary badge-sm">
-                  Primary
-                </div>
                 <button
                     type="button"
                     @click="handleDeleteMedia(media)"
@@ -502,7 +489,7 @@ watch(() => formData.value.is_recurring, (newValue) => {
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                   </svg>
                 </button>
-                <p v-if="formData.image === media.url" class="text-xs text-center text-gray-500 pt-1">Main Image</p>
+<!--                <p v-if="formData.image === media.url" class="text-xs text-center text-gray-500 pt-1">Main Image</p>-->
               </div>
             </div>
           </div>
@@ -527,7 +514,7 @@ watch(() => formData.value.is_recurring, (newValue) => {
             <select
                 v-model="formData.status"
                 class="select select-bordered w-full"
-                :disabled="loading || isUploading || deletingMediaKey"
+                :disabled="loading || isUploading || !!deletingMediaKey"
             >
               <option value="draft">Draft</option>
               <option value="published">Published</option>
@@ -547,14 +534,14 @@ watch(() => formData.value.is_recurring, (newValue) => {
                 type="button"
                 @click="handleCancel"
                 class="btn btn-ghost"
-                :disabled="loading || isUploading || deletingMediaKey"
+                :disabled="loading || isUploading || !!deletingMediaKey"
             >
               Cancel
             </button>
             <button
                 type="submit"
                 class="btn btn-primary"
-                :disabled="loading || isUploading || deletingMediaKey"
+                :disabled="loading || isUploading || !!deletingMediaKey"
             >
               <span v-if="loading || isUploading || deletingMediaKey" class="loading loading-spinner"/>
               {{

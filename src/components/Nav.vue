@@ -34,7 +34,8 @@
 
         <!-- Fixed width container for conditional links -->
         <div class="hidden xl:flex items-center space-x-2">
-          <router-link v-if="isProvider" class="btn btn-ghost btn-sm sm:btn-md rounded-btn flex-shrink-0" to="/seller/products">
+          <router-link v-if="isProvider" class="btn btn-ghost btn-sm sm:btn-md rounded-btn flex-shrink-0"
+                       to="/seller/products">
             <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
@@ -45,17 +46,17 @@
           <router-link v-if="isLoggedIn && !isProvisional"
                        :to="canAccessProviderDashboard ? '/provider-dashboard' : '/seeker-dashboard'"
                        class="btn btn-ghost btn-sm sm:btn-md rounded-btn font-semibold hover:bg-base-200 transition-all duration-200 relative z-30 flex-shrink-0">
-              <i class="fas fa-tachometer-alt text-base-content/70 text-sm w-4"></i>
-              {{ canAccessProviderDashboard ? 'Seller Dashboard' : 'Dashboard' }}
+            <i class="fas fa-tachometer-alt text-base-content/70 text-sm w-4"></i>
+            {{ canAccessProviderDashboard ? 'Seller Dashboard' : 'Dashboard' }}
           </router-link>
         </div>
       </div>
 
-<!--      <div v-if="!isLoggedIn || isSeeker" class="navbar-center absolute left-1/2 -translate-x-1/2 hidden md:flex max-w-xl px-4">-->
-<!--        <div class="w-full">-->
-<!--          <Search/>-->
-<!--        </div>-->
-<!--      </div>-->
+      <!--      <div v-if="!isLoggedIn || isSeeker" class="navbar-center absolute left-1/2 -translate-x-1/2 hidden md:flex max-w-xl px-4">-->
+      <!--        <div class="w-full">-->
+      <!--          <Search/>-->
+      <!--        </div>-->
+      <!--      </div>-->
 
 
       <div class="navbar-end flex items-center space-x-2 sm:space-x-3 flex-shrink-0">
@@ -128,25 +129,25 @@
             </li>
 
             <li v-if="!isProvisional">
-                <router-link
-                    :to="canAccessProviderDashboard ? '/provider-dashboard' : '/seeker-dashboard'"
-                    class="flex items-center gap-3 p-2 hover:bg-purple-800/10 hover:text-purple-800 rounded-lg transition-colors">
-                    <i class="fas fa-tachometer-alt text-base-content/70 text-sm w-4"></i>
-                    {{ canAccessProviderDashboard ? 'Seller Dashboard' : 'Dashboard' }}
-                </router-link>
+              <router-link
+                  :to="canAccessProviderDashboard ? '/provider-dashboard' : '/seeker-dashboard'"
+                  class="flex items-center gap-3 p-2 hover:bg-purple-800/10 hover:text-purple-800 rounded-lg transition-colors">
+                <i class="fas fa-tachometer-alt text-base-content/70 text-sm w-4"></i>
+                {{ canAccessProviderDashboard ? 'Seller Dashboard' : 'Dashboard' }}
+              </router-link>
             </li>
 
-            <li v-show="!(isProvider && (isProviderApproved || isProviderPending))">
-                <router-link to="/bookings"
+            <li v-show="!(isProvider && (isProviderActive || isProviderPendingConnectVerification))">
+              <router-link to="/bookings"
                            class="flex items-center gap-3 p-2 hover:bg-base-200/70 rounded-lg transition-colors">
-                    <i class="fas fa-calendar-alt text-base-content/70 text-sm w-4"></i> Orders
-                </router-link>
+                <i class="fas fa-calendar-alt text-base-content/70 text-sm w-4"></i> Orders
+              </router-link>
             </li>
-            <li v-show="!(isProvider && (isProviderApproved || isProviderPending))">
-                <router-link to="/listratings"
+            <li v-show="!(isProvider && (isProviderActive || isProviderPendingConnectVerification))">
+              <router-link to="/listratings"
                            class="flex items-center gap-3 p-2 hover:bg-base-200/70 rounded-lg transition-colors">
-                    <i class="fas fa-star text-base-content/70 text-sm w-4"></i> Ratings
-                </router-link>
+                <i class="fas fa-star text-base-content/70 text-sm w-4"></i> Ratings
+              </router-link>
             </li>
 
             <div class="divider my-2"></div>
@@ -237,11 +238,10 @@ const {
   isProvisional,
   canAccessProviderDashboard,
   currentUser,
-  isProviderApproved,
-  isProviderPending,
+  isProviderActive,
+  isProviderPendingConnectVerification,
   isProviderRejected,
   showBecomeProviderCTA,
-  providerStatus,
   needsEmailVerification,
 } = useAuthFlags();
 

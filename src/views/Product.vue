@@ -1,11 +1,11 @@
 <!-- Product.vue -->
 <script setup lang="ts">
-import { computed, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
-import { useCartStore } from '../stores/cartStore'
-import { useProductStore } from '../stores/productStore'
-import type { Product } from '../stores/productStore'
-import { toCurrency } from '../shared/utils'
+import {computed, onMounted} from 'vue'
+import {useRoute} from 'vue-router'
+import {useCartStore} from '../stores/cartStore'
+import {useProductStore} from '../stores/productStore'
+import type {Product} from '../stores/productStore'
+import {toCurrency} from '../shared/utils'
 import CartCardSkeleton from '../components/CartCardSkeleton.vue'
 
 const cartStore = useCartStore()
@@ -14,7 +14,7 @@ const route = useRoute()
 
 const productId = computed(() => route.params.productId as string)
 const product = computed<Product | undefined>(
-  () => productStore.getProductById(productId.value)
+    () => productStore.getProductById(productId.value)
 )
 
 const isLoading = computed(() => productStore.loading && !productStore.loaded)
@@ -39,7 +39,8 @@ const handleAddToCart = async () => {
     <!-- Error state -->
     <div v-if="hasError" class="alert alert-error mb-4" role="alert">
       <svg class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4v2m0 0v2m0-6V9m0 0V7m0 0v2" />
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 9v2m0 4v2m0 0v2m0-6V9m0 0V7m0 0v2"/>
       </svg>
       <div>
         <h3 class="font-bold">Failed to load product</h3>
@@ -52,17 +53,17 @@ const handleAddToCart = async () => {
 
     <!-- Loading skeleton -->
     <div v-if="isLoading" class="card lg:card-side bordered">
-      <CartCardSkeleton />
+      <CartCardSkeleton/>
     </div>
 
     <!-- Product details -->
     <div v-else-if="product" class="card lg:card-side bordered">
       <figure class="px-10 pt-10 lg:w-1/2">
         <img
-          :src="product.image"
-          :alt="product.title"
-          class="object-contain w-full h-96"
-        >
+            :src="product?.media?.[0]?.url || '/placeholder.png'"
+            :alt="product?.title || 'Product Image'"
+            class="rounded-xl w-full max-h-[500px] object-contain"
+        />
       </figure>
       <div class="card-body lg:w-1/2">
         <h1 class="card-title text-3xl">{{ product.title }}</h1>
@@ -71,7 +72,7 @@ const handleAddToCart = async () => {
 
         <p class="text-lg text-gray-600 my-4">{{ product.description }}</p>
 
-        <div class="divider" />
+        <div class="divider"/>
 
         <p class="text-4xl font-bold text-primary mb-4">{{ toCurrency(product.price) }}</p>
 
@@ -87,10 +88,10 @@ const handleAddToCart = async () => {
             ← Back to Shop
           </router-link>
           <button
-            class="btn btn-primary btn-lg"
-            :class="{ 'btn-outline': alreadyInCart }"
-            @click="handleAddToCart"
-            :disabled="cartStore.loading"
+              class="btn btn-primary btn-lg"
+              :class="{ 'btn-outline': alreadyInCart }"
+              @click="handleAddToCart"
+              :disabled="cartStore.loading"
           >
             {{ alreadyInCart ? '✓ Added to Cart' : 'Add to Cart' }}
           </button>
@@ -101,7 +102,8 @@ const handleAddToCart = async () => {
     <!-- Product not found -->
     <div v-else class="alert alert-warning">
       <svg class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4v2m0 0v2m0-6V9m0 0V7m0 0v2" />
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 9v2m0 4v2m0 0v2m0-6V9m0 0V7m0 0v2"/>
       </svg>
       <div>
         <h3 class="font-bold">Product not found</h3>
