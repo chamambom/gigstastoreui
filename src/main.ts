@@ -3,17 +3,21 @@
 import './style.css';
 import '@fortawesome/fontawesome-free/css/all.min.css'; // Add FontAwesome
 import 'theme-change'; // Add theme-change
-import { createApp, type App as VueApp } from 'vue';
+import {createApp, type App as VueApp} from 'vue';
 import axios from 'axios';
-import type { AxiosError, AxiosInstance, InternalAxiosRequestConfig } from 'axios';
+import type {AxiosError, AxiosInstance, InternalAxiosRequestConfig} from 'axios';
 
-import { createPinia } from 'pinia';
+import {createPinia} from 'pinia';
 import App from './App.vue';
 import router from './router';
 
+// ✅ Import Toastification
+import Toast, {type PluginOptions} from 'vue-toastification';
+import 'vue-toastification/dist/index.css';
+
 // 1. Pinia Store Imports (Need to import the specific stores needed for interceptors)
-import { useAuthStore } from './stores/authStore';
-import { useThemeStore } from './stores/themeStore';
+import {useAuthStore} from './stores/authStore';
+import {useThemeStore} from './stores/themeStore';
 
 // Define public routes by name (Used in the response interceptor)
 // NOTE: Ensure your router names match these strings
@@ -93,14 +97,14 @@ function configureAxios(routerInstance: typeof router): AxiosInstance {
 
                     // Redirect to login page
                     if (routerInstance.currentRoute.value.name !== 'Login') {
-                        await routerInstance.push({ name: 'Login' });
+                        await routerInstance.push({name: 'Login'});
                     }
 
                     return Promise.reject(error);
                 } catch (logoutError) {
                     console.error("Logout or redirect after 401 failed:", logoutError);
                     if (routerInstance.currentRoute.value.name !== 'Login') {
-                        await routerInstance.push({ name: 'Login' });
+                        await routerInstance.push({name: 'Login'});
                     }
                     return Promise.reject(error);
                 } finally {
@@ -114,12 +118,24 @@ function configureAxios(routerInstance: typeof router): AxiosInstance {
     return axios;
 }
 
+// ✅ Toast options (you can adjust freely)
+const toastOptions: PluginOptions = {
+    timeout: 4000,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    hideProgressBar: false
+};
+
 // --- 3. Initialize Auth State and Application (Typed) ---
 async function initApp(app: VueApp): Promise<void> {
 
     // Mount Pinia and Router first so the stores and router are accessible
     app.use(createPinia());
     app.use(router);
+
+    // ✅ Add Toast plugin globally
+    app.use(Toast, toastOptions);
 
     // 🔑 PINIA CHANGE: Get store instances after Pinia is mounted
     const authStore = useAuthStore();

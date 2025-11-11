@@ -87,7 +87,7 @@
 
           <router-link
               to="/signup"
-              class="btn btn-sm sm:btn-md bg-primary/90 text-white font-semibold rounded-md border-none hover:bg-purple-900 font-medium transition-all duration-200 relative z-50"
+              class="btn btn-disabled btn-sm sm:btn-md bg-primary/90 text-white font-semibold rounded-md border-none hover:bg-purple-900 font-medium transition-all duration-200 relative z-50"
           >
             Sign up to Start Selling
           </router-link>

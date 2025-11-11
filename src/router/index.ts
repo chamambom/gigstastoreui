@@ -330,7 +330,7 @@ const routes: RouteRecordRaw[] = [
     components: {
         default: () => import('../views/ComingSoonPage.vue'),
         TopNavBar,
-        FooterPage,
+        // FooterPage,
     },
     meta: { requiresAuth: false },
 },
