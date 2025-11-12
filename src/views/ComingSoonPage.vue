@@ -266,19 +266,74 @@
       </div>
 
       <!-- Footer -->
-      <div class="mt-16 text-center">
-        <div class="flex flex-wrap justify-center gap-2 text-sm text-base-content/60 mb-4">
-          <span class="badge badge-outline">#GigSta</span>
-          <span class="badge badge-outline">#GigStaStore</span>
-          <span class="badge badge-outline">#AfricanCommunity</span>
-          <span class="badge badge-outline">#SupportLocal</span>
-          <span class="badge badge-outline">#NZ</span>
-          <span class="badge badge-outline">#Australia</span>
+      <!--      <div class="mt-16 text-center">-->
+      <!--        <div class="flex flex-wrap justify-center gap-2 text-sm text-base-content/60 mb-4">-->
+      <!--          <span class="badge badge-outline">#GigSta</span>-->
+      <!--          <span class="badge badge-outline">#GigStaStore</span>-->
+      <!--          <span class="badge badge-outline">#AfricanCommunity</span>-->
+      <!--          <span class="badge badge-outline">#SupportLocal</span>-->
+      <!--          <span class="badge badge-outline">#NZ</span>-->
+      <!--          <span class="badge badge-outline">#Australia</span>-->
+      <!--        </div>-->
+      <!--        <p class="text-base-content/40 text-sm">-->
+      <!--          Building together. Growing together. Thriving together.-->
+      <!--        </p>-->
+      <!--      </div>-->
+
+      <!-- Social Media Strip -->
+      <section
+          class="w-full bg-base-200 dark:from-gray-800 dark:via-gray-800 dark:to-gray-800 dark:border-gray-700 py-6 px-20 mt-16">
+        <div class="w-[90%] mx-auto">
+          <div class="flex items-center justify-between gap-6 flex-wrap">
+            <!-- Title Section -->
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 bg-orange-400 rounded-lg flex items-center justify-center flex-shrink-0">
+                <i class="fas fa-share-alt text-white text-lg"></i>
+              </div>
+              <div>
+                <h3 class="font-semibold text-base-content text-lg">Follow Us</h3>
+                <p class="text-xs text-gray-600 dark:text-gray-400">Stay connected with GigSta & GigStaStore</p>
+              </div>
+            </div>
+
+            <!-- Social Media Links - Horizontal -->
+            <div class="flex items-center gap-3 flex-wrap flex-1 justify-end">
+              <a
+                  href="https://www.facebook.com/profile.php?id=61579148535774"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="w-10 h-10 bg-blue-600 hover:bg-blue-700 rounded-lg flex items-center justify-center text-white transition-colors duration-300 shadow-sm hover:shadow-md">
+                <i class="fa-brands fa-facebook text-lg"></i>
+              </a>
+
+              <a
+                  href="https://www.tiktok.com/@gigstanz"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="w-10 h-10 bg-black hover:bg-gray-900 rounded-lg flex items-center justify-center text-white transition-colors duration-300 shadow-sm hover:shadow-md">
+                <i class="fa-brands fa-tiktok text-lg"></i>
+              </a>
+
+              <a
+                  href="https://x.com/chamambom"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="w-10 h-10 bg-black hover:bg-gray-900 rounded-lg flex items-center justify-center text-white transition-colors duration-300 shadow-sm hover:shadow-md">
+                <i class="fa-brands fa-x-twitter text-lg"></i>
+              </a>
+
+              <a
+                  href="https://www.youtube.com/@GigStaNZ"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="w-10 h-10 bg-red-600 hover:bg-red-700 rounded-lg flex items-center justify-center text-white transition-colors duration-300 shadow-sm hover:shadow-md">
+                <i class="fa-brands fa-youtube text-lg"></i>
+              </a>
+            </div>
+          </div>
         </div>
-        <p class="text-base-content/40 text-sm">
-          Building together. Growing together. Thriving together.
-        </p>
-      </div>
+      </section>
+
     </div>
   </div>
 </template>
